@@ -51,6 +51,7 @@ describe('Player', () => {
 
       expect(player.x).to.equal(2);
       expect(player.y).to.equal(4);
+      expect(drawMock).to.have.been.calledWithExactly(2,5,'.');
       expect(drawMock).to.have.been.calledWithExactly(2,4,'@', colors.YELLOW);
     });
 

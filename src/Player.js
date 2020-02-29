@@ -6,7 +6,7 @@ class Player {
     this.game = game;
     this.x = x;
     this.y = y;
-    this.draw();
+    this.draw(x, y);
     this.resolver = () => {}; // eslint-disable-line no-empty-function
   }
 
@@ -21,10 +21,8 @@ class Player {
     if (!this.game.map[`${newX},${newY}`]) {
       return;
     }
-    this.x = newX;
-    this.y = newY;
     window.removeEventListener('keydown', this);
-    this.draw();
+    this.draw(newX, newY);
     this.resolver();
   }
 
@@ -35,8 +33,11 @@ class Player {
     });
   }
 
-  draw() {
-    this.game.display.draw(this.x, this.y, '@', colors.YELLOW);
+  draw(x, y) {
+    this.game.display.draw(this.x, this.y, '.');
+    this.game.display.draw(x, y, '@', colors.YELLOW);
+    this.x = x;
+    this.y = y;
   }
 }
 
