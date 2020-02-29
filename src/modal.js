@@ -1,14 +1,15 @@
 import {symbols} from './constants';
 export default class Modal {
-  constructor(display, callback, width, height, positionX, positionY) {
+  constructor(display, callback, text, width, positionX, positionY) {
     this.display = display;
     this.callback = callback;
     this.width = width;
-    this.height = height;
+    this.height = this.addText(text) + 2;
     this.positionX = positionX;
     this.positionY = positionY;
     this.addOutline();
     this.clear();
+    this.addText(text);
     this.resolver = () => {};
   }
 
@@ -47,8 +48,7 @@ export default class Modal {
   }
 
   addText(text) {
-    this.display.drawText(this.positionX + 1, this.positionY + 1, text, this.width - 2);
-
+    return this.display.drawText(this.positionX + 1, this.positionY + 1, text, this.width - 2);
   }
 
   clear() {

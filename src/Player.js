@@ -20,7 +20,6 @@ class Player {
     if (!(keyCode in validKeyMap)) {
       return;
     }
-    this.game.clearMessage();
 
     const [xChange, yChange] = DIRS[4][validKeyMap[keyCode]];
     const newX = this.x + xChange;
@@ -40,8 +39,8 @@ class Player {
         }
         this.game.rebuild();
       };
-      const modal = new Modal(this.game.display, pickupResponse, 20, 10, 20, 5);
-      modal.addText('This is an interesting helmet! Would you like to put it on?');
+      const modal = new Modal(this.game.display, pickupResponse, 'This is an interesting helmet! Would you like to put it on?',
+        20, 20, 5);
       this.game.scheduler.add(modal);
     }
     this.resolver();
