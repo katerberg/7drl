@@ -15,9 +15,16 @@ class Player {
       return;
     }
 
-    console.log(DIRS);
-    console.log(DIRS[4][validKeyMap[keyCode]]);
+    const [xChange, yChange] = DIRS[4][validKeyMap[keyCode]];
+    const newX = this.x + xChange;
+    const newY = this.y + yChange;
+    if (!this.game.map[`${newX},${newY}`]) {
+      return;
+    }
+    this.x = newX;
+    this.y = newY;
     window.removeEventListener('keydown', this);
+    this.draw();
     this.resolver();
   }
 

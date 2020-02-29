@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import sinon from 'sinon';
 import Player from './Player';
-import {colors} from './constants';
+import {validKeyMap, colors} from './constants';
 
 describe('Player', () => {
   describe('constuctor', () => {
@@ -25,9 +25,14 @@ describe('Player', () => {
 
   describe('handleEvent', () => {
     let player;
+    let map;
+    let drawMock;
 
     beforeEach(() => {
-      player = new Player({display: {draw: sinon.stub()}}, 5, 5);
+      drawMock = sinon.stub();
+      map = {};
+      player = new Player({map, display: {draw: drawMock}}, 2, 5);
+      drawMock.resetHistory();
     });
 
     it('does nothing with invalid input', () => {
@@ -36,15 +41,30 @@ describe('Player', () => {
       player.handleEvent({keyCode: input});
     });
 
-    it('calls resolver', () => {
-      const input = 40;
-      player.resolver = sinon.stub();
+    it('allows moving if it will be on the map', () => {
+      map['2,5'] = '.';
+      map['3,5'] = '.';
+      map['2,4'] = '.';
+      const input = 38; // Up
 
       player.handleEvent({keyCode: input});
 
-      expect(player.resolver).to.have.been.calledWithExactly();
+      expect(player.x).to.equal(2);
+      expect(player.y).to.equal(4);
+      expect(drawMock).to.have.been.calledWithExactly(2,4,'@', colors.YELLOW);
+    });
+
+    it('disallows moving if it will be off the map', () => {
+      map['2,5'] = '.';
+      map['3,5'] = '.';
+      map['2,4'] = '.';
+      const input = 40; // Down
+
+      player.handleEvent({keyCode: input});
+
+      expect(player.x).to.equal(2);
+      expect(player.y).to.equal(5);
+      expect(drawMock).to.not.have.been.called;
     });
   });
 });
-
-
