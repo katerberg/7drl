@@ -82,7 +82,7 @@
     "no-multiple-empty-lines": "error",
     "no-nested-ternary": "error",
     "no-new-object": "error",
-    "no-plusplus": "error",
+    "no-plusplus": "off",
     "no-restricted-syntax": "error",
     "no-tabs": "error",
     "no-trailing-spaces": "error",

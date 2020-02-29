@@ -43,6 +43,7 @@ describe('Player', () => {
         map,
         retrieveCache: sinon.stub(),
         redraw: sinon.stub(),
+        clearMessage: sinon.stub(),
         display: {draw: drawMock},
       }, 2, 5);
       drawMock.resetHistory();

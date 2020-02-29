@@ -36,11 +36,11 @@ export default class Game {
   }
 
   drawMap() {
-    Array(10).fill().forEach(() => {
+    for (let i = 0; i < 10; i++) {
       const space = this.popOpenFreeSpace();
       this.caches[space] = new Cache('helm');
       this.map[space] = 'x';
-    });
+    }
     Object.keys(this.map).forEach(key => {
       const parts = key.split(',');
       const x = parseInt(parts[0], 10);
@@ -51,6 +51,16 @@ export default class Game {
 
   redraw(x, y) {
     this.display.draw(x, y, this.caches[`${x},${y}`] ? 'x' : '.');
+  }
+
+  sendMessage(message) {
+    this.display.drawText(0, 0, message);
+  }
+
+  clearMessage() {
+    for (let i = 0; i < 80; i++) {
+      this.display.draw(i, 0, ' ');
+    }
   }
 
   retrieveCache(coordinate) {

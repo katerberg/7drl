@@ -19,6 +19,7 @@ class Player {
     if (!(keyCode in validKeyMap)) {
       return;
     }
+    this.game.clearMessage();
 
     const [xChange, yChange] = DIRS[4][validKeyMap[keyCode]];
     const newX = this.x + xChange;
@@ -31,6 +32,8 @@ class Player {
     this.draw(newX, newY);
     const cache = this.game.retrieveCache(this.coordinates);
     if (cache) {
+      this.game.sendMessage(`New Gear!${Math.random()}`);
+      console.log(this.gear.helm);
       this.gear[cache.type] = cache;
     }
     this.resolver();
