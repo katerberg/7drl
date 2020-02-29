@@ -1,4 +1,12 @@
 {
+  "version": "0.0.0",
+  "author": "Mark Katerberg <katerberg@fastmail.fm> (katerberg.net)",
+  "description": "Entry for 2020 7 Day Roguelike",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/katerberg/7drl"
+  },
   "dependencies": {
     "regenerator-runtime": "^0.13.3",
     "rot-js": "^2.1.1"
