@@ -23,14 +23,14 @@ export default class Game {
   }
 
   generateMap() {
-    const digger = new Map.Digger(dimensions.WIDTH, dimensions.HEIGHT, {dugPercentage: 0.9});
+    const digger = new Map.Digger(dimensions.WIDTH, dimensions.HEIGHT - 1, {dugPercentage: 0.9});
 
     const digCallback = (x, y, value) => {
       if (value) {
         return;
       } /* Do not store walls */
 
-      const key = `${x},${y}`;
+      const key = `${x},${y + 1}`;
       this.freeCells.push(key);
       this.map[key] = symbols.OPEN;
     };
