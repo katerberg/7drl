@@ -3,8 +3,8 @@ export const colors = {
 };
 
 export const validKeyMap = {
-  37: 'LEFT',
-  38: 'UP',
-  39: 'RIGHT',
-  40: 'DOWN',
+  37: 3,
+  38: 0,
+  39: 1,
+  40: 2,
 };

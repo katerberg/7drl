@@ -1,35 +1,6 @@
 import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
-import {colors, validKeyMap} from './constants';
-
-class Player {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.draw();
-    this.resolver = () => {}; // eslint-disable-line no-empty-function
-  }
-
-  handleEvent({keyCode}) {
-    if (!(keyCode in validKeyMap)) {
-      return;
-    }
-    console.log(validKeyMap[keyCode]);
-    window.removeEventListener('keydown', this);
-    this.resolver();
-  }
-
-  act() {
-    return new Promise(resolve => {
-      window.addEventListener('keydown', this);
-      this.resolver = resolve;
-    });
-  }
-
-  draw() {
-    game.display.draw(this.x, this.y, '@', colors.YELLOW);
-  }
-}
+import Player from './Player';
 
 class Game {
 
@@ -79,7 +50,7 @@ class Game {
     const parts = key.split(',');
     const x = parseInt(parts[0], 10);
     const y = parseInt(parts[1], 10);
-    return new Player(x, y);
+    return new Player(this.display, x, y);
   }
 
   async init() {
