@@ -50,7 +50,7 @@ class Game {
     const parts = key.split(',');
     const x = parseInt(parts[0], 10);
     const y = parseInt(parts[1], 10);
-    return new Player(this.display, x, y);
+    return new Player(this, x, y);
   }
 
   async init() {

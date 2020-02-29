@@ -2,8 +2,8 @@ import {DIRS} from 'rot-js';
 import {colors, validKeyMap} from './constants';
 
 class Player {
-  constructor(display, x, y) {
-    this.display = display;
+  constructor(game, x, y) {
+    this.game = game;
     this.x = x;
     this.y = y;
     this.draw();
@@ -29,7 +29,7 @@ class Player {
   }
 
   draw() {
-    this.display.draw(this.x, this.y, '@', colors.YELLOW);
+    this.game.display.draw(this.x, this.y, '@', colors.YELLOW);
   }
 }
 
