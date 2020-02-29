@@ -1,13 +1,17 @@
 import {expect} from 'chai';
 import sinon from 'sinon';
 import Player from './Player';
-import {validKeyMap, colors} from './constants';
+import {colors} from './constants';
 
 describe('Player', () => {
   describe('constuctor', () => {
     it('populates coordinates', () => {
 
-      const result = new Player({display: {draw: sinon.stub()}}, 1, 5);
+      const result = new Player({
+        redraw: sinon.stub(),
+        display: {
+          draw: sinon.stub(),
+        }}, 1, 5);
 
       expect(result.x).to.equal(1);
       expect(result.y).to.equal(5);
@@ -16,7 +20,11 @@ describe('Player', () => {
     it('draws and initializes resolver', () => {
       const draw = sinon.stub();
 
-      const result = new Player({display: {draw}}, 1, 5);
+      const result = new Player({
+        redraw: sinon.stub(),
+        display: {
+          draw,
+        }}, 1, 5);
 
       expect(typeof result.resolver).to.equal('function');
       expect(draw).to.have.been.calledWithExactly(1, 5, '@', colors.YELLOW);
@@ -31,7 +39,12 @@ describe('Player', () => {
     beforeEach(() => {
       drawMock = sinon.stub();
       map = {};
-      player = new Player({map, display: {draw: drawMock}}, 2, 5);
+      player = new Player({
+        map,
+        retrieveCache: sinon.stub(),
+        redraw: sinon.stub(),
+        display: {draw: drawMock},
+      }, 2, 5);
       drawMock.resetHistory();
     });
 
@@ -51,8 +64,8 @@ describe('Player', () => {
 
       expect(player.x).to.equal(2);
       expect(player.y).to.equal(4);
-      expect(drawMock).to.have.been.calledWithExactly(2,5,'.');
-      expect(drawMock).to.have.been.calledWithExactly(2,4,'@', colors.YELLOW);
+      expect(player.game.redraw).to.have.been.calledWithExactly(2, 5);
+      expect(drawMock).to.have.been.calledWithExactly(2, 4, '@', colors.YELLOW);
     });
 
     it('disallows moving if it will be off the map', () => {

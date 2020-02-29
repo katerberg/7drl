@@ -1,6 +1,7 @@
 import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
 import Player from './Player';
+import Cache from './Cache';
 
 export default class Game {
 
@@ -9,6 +10,7 @@ export default class Game {
     this.map = {};
     this.engine = null;
     this.freeCells = [];
+    this.caches = {};
     this.scheduler = new Scheduler.Simple();
     document.body.appendChild(this.display.getContainer());
   }
@@ -35,7 +37,9 @@ export default class Game {
 
   drawMap() {
     Array(10).fill().forEach(() => {
-      this.map[this.popOpenFreeSpace()] = 'x';
+      const space = this.popOpenFreeSpace();
+      this.caches[space] = new Cache('helm');
+      this.map[space] = 'x';
     });
     Object.keys(this.map).forEach(key => {
       const parts = key.split(',');
@@ -43,6 +47,14 @@ export default class Game {
       const y = parseInt(parts[1], 10);
       this.display.draw(x, y, this.map[key]);
     });
+  }
+
+  redraw(x, y) {
+    this.display.draw(x, y, this.caches[`${x},${y}`] ? 'x' : '.');
+  }
+
+  retrieveCache(coordinate) {
+    return this.caches[coordinate];
   }
 
   createPlayer() {
@@ -56,7 +68,7 @@ export default class Game {
   async init() {
     this.player = this.createPlayer();
     this.scheduler.add(this.player, true);
-    while (1) {
+    while (1) { // eslint-disable-line no-constant-condition
       const actor = this.scheduler.next();
       if (!actor) {
         break;

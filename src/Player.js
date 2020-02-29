@@ -6,8 +6,13 @@ class Player {
     this.game = game;
     this.x = x;
     this.y = y;
+    this.gear = {};
     this.draw(x, y);
     this.resolver = () => {}; // eslint-disable-line no-empty-function
+  }
+
+  get coordinates() {
+    return `${this.x},${this.y}`;
   }
 
   handleEvent({keyCode}) {
@@ -18,11 +23,16 @@ class Player {
     const [xChange, yChange] = DIRS[4][validKeyMap[keyCode]];
     const newX = this.x + xChange;
     const newY = this.y + yChange;
-    if (!this.game.map[`${newX},${newY}`]) {
+    const newSpace = `${newX},${newY}`;
+    if (!this.game.map[newSpace]) {
       return;
     }
     window.removeEventListener('keydown', this);
     this.draw(newX, newY);
+    const cache = this.game.retrieveCache(this.coordinates);
+    if (cache) {
+      this.gear[cache.type] = cache;
+    }
     this.resolver();
   }
 
@@ -34,7 +44,7 @@ class Player {
   }
 
   draw(x, y) {
-    this.game.display.draw(this.x, this.y, '.');
+    this.game.redraw(this.x, this.y);
     this.game.display.draw(x, y, '@', colors.YELLOW);
     this.x = x;
     this.y = y;
