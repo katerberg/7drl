@@ -1,5 +1,6 @@
 import "regenerator-runtime/runtime";
 import {Display, Map, RNG, Scheduler} from 'rot-js';
+import {colors} from './constants';
 
 class Player {
   constructor(x, y) {
@@ -8,8 +9,12 @@ class Player {
     this.draw();
   }
 
+  act() {
+    return new Promise(resolve => setTimeout(resolve, 500)); // pause
+  }
+
   draw() {
-    game.display.draw(this.x, this.y, '@', '#ff0');
+    game.display.draw(this.x, this.y, '@', colors.YELLOW);
   }
 }
 
@@ -54,7 +59,6 @@ class Game {
       const y = parseInt(parts[1], 10);
       this.display.draw(x, y, this.map[key]);
     });
-    const player = this.createPlayer();
   }
 
   createPlayer() {
@@ -81,4 +85,4 @@ class Game {
 const game = new Game();
 game.generateMap();
 game.drawMap();
-Game.init();
+game.init();
