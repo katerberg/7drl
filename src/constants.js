@@ -12,3 +12,21 @@ export const validKeyMap = {
   37: 3, // Left
   72: 3, // Left
 };
+
+export const dimensions = {
+  HEIGHT: 25,
+  WIDTH: 80,
+};
+
+export const symbols = {
+  WALL: '█',
+  CACHE: '$',
+  OPEN: ' ',
+  PLAYER: '@',
+  MODAL_CORNER_TOP_LEFT: '◸',
+  MODAL_CORNER_TOP_RIGHT: '◹',
+  MODAL_CORNER_BOTTOM_LEFT: '◺',
+  MODAL_CORNER_BOTTOM_RIGHT: '◿',
+  MODAL_Y: '|',
+  MODAL_X: '-',
+};

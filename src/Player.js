@@ -1,5 +1,6 @@
 import {DIRS} from 'rot-js';
-import {colors, validKeyMap} from './constants';
+import {colors, validKeyMap, symbols} from './constants';
+import Modal from './modal';
 
 class Player {
   constructor(game, x, y) {
@@ -8,7 +9,7 @@ class Player {
     this.y = y;
     this.gear = {};
     this.draw(x, y);
-    this.resolver = () => {}; // eslint-disable-line no-empty-function
+    this.resolver = () => {};
   }
 
   get coordinates() {
@@ -25,7 +26,7 @@ class Player {
     const newX = this.x + xChange;
     const newY = this.y + yChange;
     const newSpace = `${newX},${newY}`;
-    if (!this.game.map[newSpace]) {
+    if (this.game.map[newSpace] === undefined) {
       return;
     }
     window.removeEventListener('keydown', this);
@@ -33,8 +34,15 @@ class Player {
     const cache = this.game.retrieveCache(this.coordinates);
     if (cache) {
       this.game.sendMessage(`New Gear!${Math.random()}`);
-      console.log(this.gear.helm);
-      this.gear[cache.type] = cache;
+      const pickupResponse = res => {
+        if (res) {
+          this.gear[cache.type] = cache;
+          this.game.removeCache(this.coordinates);
+        }
+      };
+      const modal = new Modal(this.game.display, pickupResponse, 20, 10, 20, 5);
+      modal.addText('This is an interesting helmet! Would you like to put it on?');
+      this.game.scheduler.add(modal);
     }
     this.resolver();
   }
@@ -48,7 +56,7 @@ class Player {
 
   draw(x, y) {
     this.game.redraw(this.x, this.y);
-    this.game.display.draw(x, y, '@', colors.YELLOW);
+    this.game.display.draw(x, y, symbols.PLAYER, colors.YELLOW);
     this.x = x;
     this.y = y;
   }

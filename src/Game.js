@@ -2,11 +2,12 @@ import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
 import Player from './Player';
 import Cache from './Cache';
+import {dimensions, symbols} from './constants';
 
 export default class Game {
 
   constructor() {
-    this.display = new Display({width: 80, height: 25});
+    this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
     this.map = {};
     this.engine = null;
     this.freeCells = [];
@@ -16,7 +17,7 @@ export default class Game {
   }
 
   generateMap() {
-    const digger = new Map.Digger(80, 25, {dugPercentage: 0.9});
+    const digger = new Map.Digger(dimensions.WIDTH, dimensions.HEIGHT, {dugPercentage: 0.9});
 
     const digCallback = (x, y, value) => {
       if (value) {
@@ -25,7 +26,7 @@ export default class Game {
 
       const key = `${x},${y}`;
       this.freeCells.push(key);
-      this.map[key] = '.';
+      this.map[key] = symbols.OPEN;
     };
     digger.create(digCallback.bind(this));
   }
@@ -33,6 +34,16 @@ export default class Game {
   popOpenFreeSpace() {
     const index = Math.floor(RNG.getUniform() * this.freeCells.length);
     return this.freeCells.splice(index, 1)[0];
+  }
+
+  drawWalls() {
+    for (let i = 0; i < dimensions.WIDTH; i++) {
+      for (let j = 1; j < dimensions.HEIGHT; j++) {
+        if (!this.map[`${i},${j}`]) {
+          this.display.draw(i, j, symbols.WALL);
+        }
+      }
+    }
   }
 
   drawMap() {
@@ -44,12 +55,12 @@ export default class Game {
       const parts = key.split(',');
       const x = parseInt(parts[0], 10);
       const y = parseInt(parts[1], 10);
-      this.display.draw(x, y, this.caches[key] ? 'x' : '.');
+      this.display.draw(x, y, this.caches[key] ? symbols.CACHE : symbols.OPEN);
     });
   }
 
   redraw(x, y) {
-    this.display.draw(x, y, this.caches[`${x},${y}`] ? 'x' : '.');
+    this.display.draw(x, y, this.caches[`${x},${y}`] ? symbols.CACHE : symbols.OPEN);
   }
 
   sendMessage(message) {
@@ -57,13 +68,17 @@ export default class Game {
   }
 
   clearMessage() {
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < dimensions.WIDTH; i++) {
       this.display.draw(i, 0, ' ');
     }
   }
 
   retrieveCache(coordinate) {
     return this.caches[coordinate];
+  }
+
+  removeCache(coordinate) {
+    delete this.caches[coordinate];
   }
 
   createPlayer() {
@@ -87,6 +102,7 @@ export default class Game {
     this.player = this.createPlayer();
     this.scheduler.add(this.player, true);
     while (1) { // eslint-disable-line no-constant-condition
+      console.log('turn');
       const good = await this.nextTurn();
       if (!good) {
         break;
