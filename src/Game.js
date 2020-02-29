@@ -9,11 +9,17 @@ export default class Game {
   constructor() {
     this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
     this.map = {};
-    this.engine = null;
+    this.player = null;
     this.freeCells = [];
     this.caches = {};
     this.scheduler = new Scheduler.Simple();
     document.body.appendChild(this.display.getContainer());
+  }
+
+  rebuild() {
+    this.drawWalls();
+    this.drawMap();
+    this.player.draw();
   }
 
   generateMap() {
@@ -29,6 +35,10 @@ export default class Game {
       this.map[key] = symbols.OPEN;
     };
     digger.create(digCallback.bind(this));
+    for (let i = 0; i < 10; i++) {
+      const space = this.popOpenFreeSpace();
+      this.caches[space] = new Cache('helm');
+    }
   }
 
   popOpenFreeSpace() {
@@ -47,10 +57,6 @@ export default class Game {
   }
 
   drawMap() {
-    for (let i = 0; i < 10; i++) {
-      const space = this.popOpenFreeSpace();
-      this.caches[space] = new Cache('helm');
-    }
     Object.keys(this.map).forEach(key => {
       const parts = key.split(',');
       const x = parseInt(parts[0], 10);
@@ -102,7 +108,6 @@ export default class Game {
     this.player = this.createPlayer();
     this.scheduler.add(this.player, true);
     while (1) { // eslint-disable-line no-constant-condition
-      console.log('turn');
       const good = await this.nextTurn();
       if (!good) {
         break;

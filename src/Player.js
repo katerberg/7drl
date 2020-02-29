@@ -33,12 +33,12 @@ class Player {
     this.draw(newX, newY);
     const cache = this.game.retrieveCache(this.coordinates);
     if (cache) {
-      this.game.sendMessage(`New Gear!${Math.random()}`);
       const pickupResponse = res => {
         if (res) {
-          this.gear[cache.type] = cache;
           this.game.removeCache(this.coordinates);
+          this.gear[cache.type] = cache;
         }
+        this.game.rebuild();
       };
       const modal = new Modal(this.game.display, pickupResponse, 20, 10, 20, 5);
       modal.addText('This is an interesting helmet! Would you like to put it on?');
@@ -55,10 +55,12 @@ class Player {
   }
 
   draw(x, y) {
+    const newX = x || this.x;
+    const newY = y || this.y;
     this.game.redraw(this.x, this.y);
-    this.game.display.draw(x, y, symbols.PLAYER, colors.YELLOW);
-    this.x = x;
-    this.y = y;
+    this.game.display.draw(newX, newY, symbols.PLAYER, colors.YELLOW);
+    this.x = newX;
+    this.y = newY;
   }
 }
 
