@@ -39,13 +39,12 @@ export default class Game {
     for (let i = 0; i < 10; i++) {
       const space = this.popOpenFreeSpace();
       this.caches[space] = new Cache('helm');
-      this.map[space] = 'x';
     }
     Object.keys(this.map).forEach(key => {
       const parts = key.split(',');
       const x = parseInt(parts[0], 10);
       const y = parseInt(parts[1], 10);
-      this.display.draw(x, y, this.map[key]);
+      this.display.draw(x, y, this.caches[key] ? 'x' : '.');
     });
   }
 
@@ -75,15 +74,23 @@ export default class Game {
     return new Player(this, x, y);
   }
 
+  async nextTurn() {
+    const actor = this.scheduler.next();
+    if (!actor) {
+      return false;
+    }
+    await actor.act();
+    return true;
+  }
+
   async init() {
     this.player = this.createPlayer();
     this.scheduler.add(this.player, true);
     while (1) { // eslint-disable-line no-constant-condition
-      const actor = this.scheduler.next();
-      if (!actor) {
+      const good = await this.nextTurn();
+      if (!good) {
         break;
       }
-      await actor.act();
     }
   }
 }
