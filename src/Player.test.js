@@ -41,7 +41,7 @@ describe('Player', () => {
       map = {};
       player = new Player({
         map,
-        retrieveCache: sinon.stub(),
+        retrieveContents: sinon.stub(),
         redraw: sinon.stub(),
         clearMessage: sinon.stub(),
         display: {draw: drawMock},

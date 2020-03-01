@@ -2,7 +2,8 @@ import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
 import Player from './Player';
 import Cache from './Cache';
-import {dimensions, symbols} from './constants';
+import Ladder from './Ladder';
+import {dimensions, symbols, colors} from './constants';
 
 export default class Game {
 
@@ -20,7 +21,7 @@ export default class Game {
   rebuild() {
     this.drawWalls();
     this.drawMap();
-    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER);
+    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER, colors.RED);
     this.player.draw();
   }
 
@@ -45,7 +46,7 @@ export default class Game {
   }
 
   addExitLadder() {
-    this.exit = this.popOpenFreeSpace().split(',').map(i => parseInt(i, 10));
+    this.exit = new Ladder(...this.popOpenFreeSpace().split(','));
   }
 
   popOpenFreeSpace() {
@@ -68,19 +69,24 @@ export default class Game {
       const parts = key.split(',');
       const x = parseInt(parts[0], 10);
       const y = parseInt(parts[1], 10);
-      this.display.draw(x, y, this.caches[key] ? symbols.CACHE : symbols.OPEN);
+      const isCache = this.caches[key];
+      this.display.draw(x, y, isCache ? symbols.CACHE : symbols.OPEN, isCache ? colors.GREEN : null);
     });
-    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER);
+    this.display.draw(this.exit.x, this.exit.y, symbols.LADDER, colors.RED);
   }
 
   redraw(x, y) {
     let symbol = symbols.OPEN;
-    if (this.caches[`${x},${y}`]) {
+    let color = null;
+    const keyFormat = `${x},${y}`;
+    if (this.caches[keyFormat]) {
       symbol = symbols.CACHE;
-    } else if (this.exit[0] === x && this.exit[1] === y) {
+      color = colors.GREEN;
+    } else if (this.exit.matches(keyFormat)) {
       symbol = symbols.LADDER;
+      color = colors.RED;
     }
-    this.display.draw(x, y, symbol);
+    this.display.draw(x, y, symbol, color);
   }
 
   sendMessage(message) {
@@ -93,12 +99,16 @@ export default class Game {
     }
   }
 
-  retrieveCache(coordinate) {
-    return this.caches[coordinate];
+  retrieveContents(coordinate) {
+    return this.caches[coordinate] || this.exit.matches(coordinate);
   }
 
   removeCache(coordinate) {
     delete this.caches[coordinate];
+  }
+
+  nextLevel() {
+    console.log('advancing');
   }
 
   createPlayer() {

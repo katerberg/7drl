@@ -1,5 +1,7 @@
 import {DIRS} from 'rot-js';
 import {colors, validKeyMap, symbols} from './constants';
+import Cache from './Cache';
+import Ladder from './Ladder';
 import Modal from './modal';
 
 class Player {
@@ -28,21 +30,31 @@ class Player {
     if (this.game.map[newSpace] === undefined) {
       return;
     }
-    window.removeEventListener('keydown', this);
     this.draw(newX, newY);
-    const cache = this.game.retrieveCache(this.coordinates);
-    if (cache) {
+    const contents = this.game.retrieveContents(this.coordinates);
+    if (contents instanceof Cache) {
       const pickupResponse = res => {
         if (res) {
           this.game.removeCache(this.coordinates);
-          this.gear[cache.type] = cache;
+          this.gear[contents.type] = contents;
         }
         this.game.rebuild();
       };
       const modal = new Modal(this.game.display, pickupResponse, 'This is an interesting helmet! Would you like to put it on?',
         20, 20, 5);
       this.game.scheduler.add(modal);
+    } else if (contents instanceof Ladder) {
+      const nextLevelResponse = res => {
+        if (res) {
+          this.game.nextLevel();
+        }
+        this.game.rebuild();
+      };
+      const modal = new Modal(this.game.display, nextLevelResponse, 'Are you ready to climb higher?',
+        20, 20, 5);
+      this.game.scheduler.add(modal);
     }
+    window.removeEventListener('keydown', this);
     this.resolver();
   }
 
