@@ -47,6 +47,15 @@ export default class Game {
       const space = this.popOpenFreeSpace();
       this.caches[space] = new Cache('helm');
     }
+    this.drawLevel();
+  }
+
+  drawLevel() {
+    this.display.draw(dimensions.WIDTH - 4, 0, 'L');
+    const levelString = `${this.level}`.padStart(3, 0);
+    for (let i = 3; i > 0; i--) {
+      this.display.draw(dimensions.WIDTH - i, 0, levelString[levelString.length - i]);
+    }
   }
 
   addExitLadder() {
@@ -98,7 +107,7 @@ export default class Game {
   }
 
   clearMessage() {
-    for (let i = 0; i < dimensions.WIDTH; i++) {
+    for (let i = 0; i < dimensions.WIDTH - 3; i++) {
       this.display.draw(i, 0, ' ');
     }
   }
@@ -112,16 +121,15 @@ export default class Game {
   }
 
   nextLevel() {
+    this.level += 1;
     this.generateMap();
     this.drawWalls();
     this.drawMap();
-    this.level = this.level + 1 ;
-    console.log(`advancing to level ${this.level}`);
   }
 
   createPlayer() {
     const key = this.popOpenFreeSpace();
-    const [x,y] = key.split(',').map(i => parseInt(i, 10));
+    const [x, y] = key.split(',').map(i => parseInt(i, 10));
     return new Player(this, x, y);
   }
 
