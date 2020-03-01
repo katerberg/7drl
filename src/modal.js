@@ -1,6 +1,6 @@
 import {symbols} from './constants';
 export default class Modal {
-  constructor(display, callback, text, width, positionX, positionY) {
+  constructor(display, callback, text, width, positionX, positionY, modalChoices) {
     this.display = display;
     this.callback = callback;
     this.width = width;
@@ -11,6 +11,7 @@ export default class Modal {
     this.clear();
     this.addText(text);
     this.resolver = () => {};
+    this.modalChoices = modalChoices;
   }
 
   act() {
@@ -21,14 +22,11 @@ export default class Modal {
   }
 
   handleEvent({keyCode}) {
-    const modalChoices = {
-      89: true, // Y
-      78: false, // N
-    };
-    if (!(keyCode in modalChoices)) {
+    if (this.modalChoices && !(keyCode in this.modalChoices)) {
       return;
     }
-    this.callback(modalChoices[keyCode]);
+    const choices = this.modalChoices || {};
+    this.callback(choices[keyCode]);
     window.removeEventListener('keydown', this);
     this.resolver();
   }

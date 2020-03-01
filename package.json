@@ -29,6 +29,7 @@
     "mocha": "^7.1.0",
     "sinon": "^9.0.0",
     "sinon-chai": "^3.5.0",
+    "watch": "^1.0.2",
     "webpack": "^4.41.6",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"
@@ -37,6 +38,7 @@
     "build": "webpack --config ./webpack.config.js --mode production",
     "start": "webpack-dev-server --config ./webpack.config.js --mode development",
     "lint": "eslint --ext json,js src",
+    "lint:watch": "watch 'npm run lint' src",
     "test": "mocha --require @babel/register 'src/*.test.js' 'test'"
   }
 }

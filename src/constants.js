@@ -4,7 +4,7 @@ export const colors = {
   RED: '#f00',
 };
 
-export const validKeyMap = {
+export const movementKeymap = {
   38: 0, // Up
   75: 0, // Up
   39: 1, // Right
@@ -13,6 +13,12 @@ export const validKeyMap = {
   74: 2, // Down
   37: 3, // Left
   72: 3, // Left
+};
+
+export const validKeymap = {
+  ...movementKeymap,
+  71: 'Gear', // G
+  73: 'Gear', // I
 };
 
 export const dimensions = {
@@ -32,4 +38,11 @@ export const symbols = {
   MODAL_Y: '|',
   MODAL_X: '-',
   LADDER: '▤',
+};
+
+export const modalChoices = {
+  yn: {
+    89: true, // Y
+    78: false, // N
+  },
 };

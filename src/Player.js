@@ -1,5 +1,5 @@
 import {DIRS} from 'rot-js';
-import {colors, validKeyMap, symbols} from './constants';
+import {colors, modalChoices, movementKeymap, validKeymap, symbols} from './constants';
 import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './modal';
@@ -19,11 +19,31 @@ class Player {
   }
 
   handleEvent({keyCode}) {
-    if (!(keyCode in validKeyMap)) {
+    if (!(keyCode in validKeymap)) {
+      console.log(`Keycode is ${keyCode}`); // eslint-disable-line no-console
       return;
     }
+    if (keyCode in movementKeymap) {
+      this.handleMovement(keyCode);
+    } else if (validKeymap[keyCode] === 'Gear') {
+      this.handleOpenInventory();
+    }
+    window.removeEventListener('keydown', this);
+    this.resolver();
+  }
 
-    const [xChange, yChange] = DIRS[4][validKeyMap[keyCode]];
+  handleOpenInventory() {
+
+    const pickupResponse = () => {
+      this.game.rebuild();
+    };
+    const modal = new Modal(this.game.display, pickupResponse, JSON.stringify(this.gear, null, 2),
+      20, 20, 5);
+    this.game.scheduler.add(modal);
+  }
+
+  handleMovement(keyCode) {
+    const [xChange, yChange] = DIRS[4][movementKeymap[keyCode]];
     const newX = this.x + xChange;
     const newY = this.y + yChange;
     const newSpace = `${newX},${newY}`;
@@ -41,7 +61,7 @@ class Player {
         this.game.rebuild();
       };
       const modal = new Modal(this.game.display, pickupResponse, 'This is an interesting helmet! Would you like to put it on?',
-        20, 20, 5);
+        20, 20, 5, modalChoices.yn);
       this.game.scheduler.add(modal);
     } else if (contents instanceof Ladder) {
       const nextLevelResponse = res => {
@@ -51,11 +71,9 @@ class Player {
         this.game.rebuild();
       };
       const modal = new Modal(this.game.display, nextLevelResponse, 'Are you ready to climb higher?',
-        20, 20, 5);
+        20, 20, 5, modalChoices.yn);
       this.game.scheduler.add(modal);
     }
-    window.removeEventListener('keydown', this);
-    this.resolver();
   }
 
   act() {
