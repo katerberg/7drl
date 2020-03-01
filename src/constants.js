@@ -29,4 +29,5 @@ export const symbols = {
   MODAL_CORNER_BOTTOM_RIGHT: '◿',
   MODAL_Y: '|',
   MODAL_X: '-',
+  LADDER: '▤',
 };

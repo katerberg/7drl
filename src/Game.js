@@ -10,6 +10,7 @@ export default class Game {
     this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
     this.map = {};
     this.player = null;
+    this.exit = null;
     this.freeCells = [];
     this.caches = {};
     this.scheduler = new Scheduler.Simple();
@@ -19,6 +20,7 @@ export default class Game {
   rebuild() {
     this.drawWalls();
     this.drawMap();
+    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER);
     this.player.draw();
   }
 
@@ -35,10 +37,15 @@ export default class Game {
       this.map[key] = symbols.OPEN;
     };
     digger.create(digCallback.bind(this));
+    this.addExitLadder();
     for (let i = 0; i < 10; i++) {
       const space = this.popOpenFreeSpace();
       this.caches[space] = new Cache('helm');
     }
+  }
+
+  addExitLadder() {
+    this.exit = this.popOpenFreeSpace().split(',').map(i => parseInt(i, 10));
   }
 
   popOpenFreeSpace() {
@@ -63,6 +70,7 @@ export default class Game {
       const y = parseInt(parts[1], 10);
       this.display.draw(x, y, this.caches[key] ? symbols.CACHE : symbols.OPEN);
     });
+    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER);
   }
 
   redraw(x, y) {

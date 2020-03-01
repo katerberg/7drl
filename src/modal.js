@@ -29,6 +29,7 @@ export default class Modal {
       return;
     }
     this.callback(modalChoices[keyCode]);
+    window.removeEventListener('keydown', this);
     this.resolver();
   }
 
