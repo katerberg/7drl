@@ -10,6 +10,7 @@ export default class Game {
   constructor() {
     this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
     this.map = {};
+    this.level = 0;
     this.player = null;
     this.exit = null;
     this.freeCells = [];
@@ -26,6 +27,9 @@ export default class Game {
   }
 
   generateMap() {
+    this.freeCells.length = 0;
+    this.caches.length = 0;
+    this.map = {};
     const digger = new Map.Digger(dimensions.WIDTH, dimensions.HEIGHT - 1, {dugPercentage: 0.9});
 
     const digCallback = (x, y, value) => {
@@ -108,14 +112,16 @@ export default class Game {
   }
 
   nextLevel() {
-    console.log('advancing');
+    this.generateMap();
+    this.drawWalls();
+    this.drawMap();
+    this.level = this.level + 1 ;
+    console.log(`advancing to level ${this.level}`);
   }
 
   createPlayer() {
     const key = this.popOpenFreeSpace();
-    const parts = key.split(',');
-    const x = parseInt(parts[0], 10);
-    const y = parseInt(parts[1], 10);
+    const [x,y] = key.split(',').map(i => parseInt(i, 10));
     return new Player(this, x, y);
   }
 
