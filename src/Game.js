@@ -98,6 +98,8 @@ export default class Game {
     } else if (this.exit.matches(keyFormat)) {
       symbol = symbols.LADDER;
       color = colors.RED;
+    } else if (!this.map[keyFormat]) {
+      symbol = symbols.WALL;
     }
     this.display.draw(x, y, symbol, color);
   }
@@ -125,6 +127,11 @@ export default class Game {
     this.generateMap();
     this.drawWalls();
     this.drawMap();
+    if (!this.map[this.player.coordinates]) {
+      const key = this.popOpenFreeSpace();
+      const [x, y] = key.split(',').map(i => parseInt(i, 10));
+      this.player.draw(x, y);
+    }
   }
 
   createPlayer() {
