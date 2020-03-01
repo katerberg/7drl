@@ -74,7 +74,13 @@ export default class Game {
   }
 
   redraw(x, y) {
-    this.display.draw(x, y, this.caches[`${x},${y}`] ? symbols.CACHE : symbols.OPEN);
+    let symbol = symbols.OPEN;
+    if (this.caches[`${x},${y}`]) {
+      symbol = symbols.CACHE;
+    } else if (this.exit[0] === x && this.exit[1] === y) {
+      symbol = symbols.LADDER;
+    }
+    this.display.draw(x, y, symbol);
   }
 
   sendMessage(message) {
