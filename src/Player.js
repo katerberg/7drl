@@ -52,7 +52,7 @@ class Player {
     return (res) => {
       callback && callback(res);
       this.game.rebuild();
-      window.addEventListener('keydown', this)
+      window.addEventListener('keydown', this);
     };
   }
 
@@ -62,7 +62,7 @@ class Player {
     DEX:${this.displayStat('dexterity')}    ${getDisplayText(this.gear.Armor) || 'No armor'}
     HP: ${this.displayStat('maxHp')}    ${getDisplayText(this.gear.Amulet) || 'No amulet'}
     XP: ${`${this.xp}`.padStart(3)}`;
-    const modal = new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
+    new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
   }
 
   handleMovement(keyCode) {
@@ -83,7 +83,7 @@ class Player {
         }
         this.resolver();
       });
-      const modal = new Modal(this.game.display, pickupResponse, `${contents.display}. Would you like to equip it?`,
+      new Modal(this.game.display, pickupResponse, `${contents.display}. Would you like to equip it?`,
         20, 20, 5, modalChoices.yn);
     } else if (contents instanceof Ladder) {
       const nextLevelResponse = this.buildModalCallback(res => {
@@ -91,7 +91,7 @@ class Player {
           this.game.nextLevel();
         }
       });
-      const modal = new Modal(this.game.display, nextLevelResponse, 'Are you ready to climb higher?',
+      new Modal(this.game.display, nextLevelResponse, 'Are you ready to climb higher?',
         20, 20, 5, modalChoices.yn);
     } else {
       this.resolver();

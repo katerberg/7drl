@@ -36,7 +36,7 @@
     "no-multi-str": "error",
     "no-new-func": "error",
     "no-new-wrappers": "error",
-    "no-new": "error",
+    "no-new": "off",
     "no-octal-escape": "error",
     "no-param-reassign": "error",
     "no-proto": "error",

@@ -1,6 +1,7 @@
 import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
 import Player from './Player';
+import Enemy from './Enemy';
 import Cache from './Cache';
 import Ladder from './Ladder';
 import {dimensions, symbols, colors} from './constants';
@@ -154,6 +155,7 @@ export default class Game {
   async init() {
     this.player = this.createPlayer();
     this.scheduler.add(this.player, true);
+    this.scheduler.add(new Enemy(this), true);
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();
       if (!good) {
