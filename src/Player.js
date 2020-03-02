@@ -1,5 +1,5 @@
 import {DIRS} from 'rot-js';
-import {colors, modalChoices, movementKeymap, validKeymap, symbols} from './constants';
+import {colors, dimensions, modalChoices, movementKeymap, validKeymap, symbols} from './constants';
 import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './modal';
@@ -22,6 +22,7 @@ class Player {
     };
     this.gear = {};
     this.currentHp = 5;
+    this.xp = 0;
     this.draw(x, y);
     this.resolver = () => {};
   }
@@ -53,11 +54,12 @@ class Player {
     const pickupResponse = () => {
       this.game.rebuild();
     };
-    const gearText = `STR:${this.displayStat('strength')}        ${getDisplayText(this.gear.Weapon) || 'No weapon'}
-    DEX:${this.displayStat('dexterity')}        ${getDisplayText(this.gear.Armor) || 'No armor'}
-    HP: ${this.displayStat('maxHp')}        ${getDisplayText(this.gear.Amulet) || 'No amulet'}
+    const gearText = `STR:${this.displayStat('strength')}    ${getDisplayText(this.gear.Weapon) || 'No weapon'}
+    DEX:${this.displayStat('dexterity')}    ${getDisplayText(this.gear.Armor) || 'No armor'}
+    HP: ${this.displayStat('maxHp')}    ${getDisplayText(this.gear.Amulet) || 'No amulet'}
+    XP: ${`${this.xp}`.padStart(3)}
 `;
-    const modal = new Modal(this.game.display, pickupResponse, gearText, 60, 10, 5);
+    const modal = new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
     this.game.scheduler.add(modal);
   }
 
@@ -102,6 +104,20 @@ class Player {
     });
   }
 
+  drawHp() {
+    this.game.display.drawText(dimensions.WIDTH - 15, 0, 'HP:');
+    const currentHpString = `${this.currentHp}`;
+    const maxHpString = `${this.stats.maxHp}`;
+    const start = dimensions.WIDTH - 12;
+    for (let i = 0; i < currentHpString.length; i++) {
+      this.game.display.draw(start + i, 0, currentHpString[i]);
+    }
+    this.game.display.draw(start + currentHpString.length, 0, '/');
+    for (let i = 0; i < maxHpString.length; i++) {
+      this.game.display.draw(start + i + 1 + currentHpString.length, 0, maxHpString[i]);
+    }
+  }
+
   draw(x, y) {
     const newX = x || this.x;
     const newY = y || this.y;
@@ -109,6 +125,7 @@ class Player {
     this.game.display.draw(newX, newY, symbols.PLAYER, colors.YELLOW);
     this.x = newX;
     this.y = newY;
+    this.drawHp();
   }
 }
 

@@ -11,6 +11,7 @@ describe('Player', () => {
         redraw: sinon.stub(),
         display: {
           draw: sinon.stub(),
+          drawText: sinon.stub(),
         }}, 1, 5);
 
       expect(result.x).to.equal(1);
@@ -24,6 +25,7 @@ describe('Player', () => {
         redraw: sinon.stub(),
         display: {
           draw,
+          drawText: sinon.stub(),
         }}, 1, 5);
 
       expect(typeof result.resolver).to.equal('function');
@@ -44,7 +46,10 @@ describe('Player', () => {
         retrieveContents: sinon.stub(),
         redraw: sinon.stub(),
         clearMessage: sinon.stub(),
-        display: {draw: drawMock},
+        display: {
+          draw: drawMock,
+          drawText: sinon.stub(),
+        },
       }, 2, 5);
       drawMock.resetHistory();
     });
