@@ -45,7 +45,7 @@ export default class Game {
     this.addExitLadder();
     for (let i = 0; i < 10; i++) {
       const space = this.popOpenFreeSpace();
-      this.caches[space] = new Cache('helm');
+      this.caches[space] = new Cache(this.level);
     }
     this.drawLevel();
   }

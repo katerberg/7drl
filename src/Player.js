@@ -4,6 +4,12 @@ import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './modal';
 
+function getDisplayText(gear) {
+  if (gear) {
+    return `${gear.display} (+${gear.modifier})`;
+  }
+}
+
 class Player {
   constructor(game, x, y) {
     this.game = game;
@@ -41,17 +47,17 @@ class Player {
   displayStat(stat) {
     return `${this.stats[stat]}`.padStart(3);
   }
+
   handleOpenInventory() {
 
     const pickupResponse = () => {
       this.game.rebuild();
     };
-    const gearText = `STR:${this.displayStat('strength')}               ${this.gear.Weapon || 'No weapon'}
-    DEX:${this.displayStat('dexterity')}               ${this.gear.Armor || 'No armor'}
-    HP: ${this.displayStat('maxHp')}               ${this.gear.Amulet || 'No amulet'}
+    const gearText = `STR:${this.displayStat('strength')}          ${getDisplayText(this.gear.Weapon) || 'No weapon'}
+    DEX:${this.displayStat('dexterity')}          ${getDisplayText(this.gear.Armor) || 'No armor'}
+    HP: ${this.displayStat('maxHp')}          ${getDisplayText(this.gear.Amulet) || 'No amulet'}
     `;
-    const modal = new Modal(this.game.display, pickupResponse, gearText,
-      60, 10, 5);
+    const modal = new Modal(this.game.display, pickupResponse, gearText, 60, 10, 5);
     this.game.scheduler.add(modal);
   }
 
@@ -73,7 +79,7 @@ class Player {
         }
         this.game.rebuild();
       };
-      const modal = new Modal(this.game.display, pickupResponse, 'This is an interesting helmet! Would you like to put it on?',
+      const modal = new Modal(this.game.display, pickupResponse, `${contents.display}. Would you like to equip it?`,
         20, 20, 5, modalChoices.yn);
       this.game.scheduler.add(modal);
     } else if (contents instanceof Ladder) {

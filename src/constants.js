@@ -46,3 +46,9 @@ export const modalChoices = {
     78: false, // N
   },
 };
+
+export const gearTypes = {
+  Armor: 5,
+  Weapon: 5,
+  Amulet: 1,
+};
