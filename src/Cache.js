@@ -1,13 +1,20 @@
-import {RNG} from 'rot-js';
-
 class Cache {
-  constructor(type) {
+  constructor(type, name, attack = 0, defense = 0, hp = 0) {
     this.type = type;
+    this.name = name;
     this.modifiers = {
-      attack: RNG.getPercentage() - 50,
-      defense: RNG.getPercentage() - 50,
-      hp: RNG.getPercentage() - 50,
+      attack,
+      defense,
+      hp,
     };
+  }
+
+  get display() {
+    return `${this.type} of ${this.name}`;
+  }
+
+  get modifier() {
+    return this.attack || this.defense || this.hp;
   }
 }
 

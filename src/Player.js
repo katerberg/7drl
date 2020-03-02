@@ -9,7 +9,13 @@ class Player {
     this.game = game;
     this.x = x;
     this.y = y;
+    this.stats = {
+      maxHp: 5,
+      strength: 1,
+      dexterity: 1,
+    };
     this.gear = {};
+    this.currentHp = 5;
     this.draw(x, y);
     this.resolver = () => {};
   }
@@ -32,13 +38,20 @@ class Player {
     this.resolver();
   }
 
+  displayStat(stat) {
+    return `${this.stats[stat]}`.padStart(3);
+  }
   handleOpenInventory() {
 
     const pickupResponse = () => {
       this.game.rebuild();
     };
-    const modal = new Modal(this.game.display, pickupResponse, JSON.stringify(this.gear, null, 2),
-      20, 20, 5);
+    const gearText = `STR:${this.displayStat('strength')}               ${this.gear.Weapon || 'No weapon'}
+    DEX:${this.displayStat('dexterity')}               ${this.gear.Armor || 'No armor'}
+    HP: ${this.displayStat('maxHp')}               ${this.gear.Amulet || 'No amulet'}
+    `;
+    const modal = new Modal(this.game.display, pickupResponse, gearText,
+      60, 10, 5);
     this.game.scheduler.add(modal);
   }
 
