@@ -53,10 +53,10 @@ class Player {
     const pickupResponse = () => {
       this.game.rebuild();
     };
-    const gearText = `STR:${this.displayStat('strength')}          ${getDisplayText(this.gear.Weapon) || 'No weapon'}
-    DEX:${this.displayStat('dexterity')}          ${getDisplayText(this.gear.Armor) || 'No armor'}
-    HP: ${this.displayStat('maxHp')}          ${getDisplayText(this.gear.Amulet) || 'No amulet'}
-    `;
+    const gearText = `STR:${this.displayStat('strength')}        ${getDisplayText(this.gear.Weapon) || 'No weapon'}
+    DEX:${this.displayStat('dexterity')}        ${getDisplayText(this.gear.Armor) || 'No armor'}
+    HP: ${this.displayStat('maxHp')}        ${getDisplayText(this.gear.Amulet) || 'No amulet'}
+`;
     const modal = new Modal(this.game.display, pickupResponse, gearText, 60, 10, 5);
     this.game.scheduler.add(modal);
   }
