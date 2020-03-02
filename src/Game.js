@@ -123,6 +123,8 @@ export default class Game {
   }
 
   nextLevel() {
+    this.scheduler.clear();
+    this.scheduler.add(this.player, true);
     this.level += 1;
     this.generateMap();
     this.drawWalls();

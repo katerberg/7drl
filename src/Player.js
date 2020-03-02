@@ -41,26 +41,28 @@ class Player {
     } else if (validKeymap[keyCode] === 'Gear') {
       this.handleOpenInventory();
     }
-    window.removeEventListener('keydown', this);
-    this.resolver();
   }
 
   displayStat(stat) {
     return `${this.stats[stat]}`.padStart(3);
   }
 
-  handleOpenInventory() {
-
-    const pickupResponse = () => {
+  buildModalCallback(callback) {
+    window.removeEventListener('keydown', this);
+    return (res) => {
+      callback && callback(res);
       this.game.rebuild();
+      window.addEventListener('keydown', this)
     };
+  }
+
+  handleOpenInventory() {
+    const pickupResponse = this.buildModalCallback();
     const gearText = `STR:${this.displayStat('strength')}    ${getDisplayText(this.gear.Weapon) || 'No weapon'}
     DEX:${this.displayStat('dexterity')}    ${getDisplayText(this.gear.Armor) || 'No armor'}
     HP: ${this.displayStat('maxHp')}    ${getDisplayText(this.gear.Amulet) || 'No amulet'}
-    XP: ${`${this.xp}`.padStart(3)}
-`;
+    XP: ${`${this.xp}`.padStart(3)}`;
     const modal = new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
-    this.game.scheduler.add(modal);
   }
 
   handleMovement(keyCode) {
@@ -74,26 +76,25 @@ class Player {
     this.draw(newX, newY);
     const contents = this.game.retrieveContents(this.coordinates);
     if (contents instanceof Cache) {
-      const pickupResponse = res => {
+      const pickupResponse = this.buildModalCallback(res => {
         if (res) {
           this.game.removeCache(this.coordinates);
           this.gear[contents.type] = contents;
         }
-        this.game.rebuild();
-      };
+        this.resolver();
+      });
       const modal = new Modal(this.game.display, pickupResponse, `${contents.display}. Would you like to equip it?`,
         20, 20, 5, modalChoices.yn);
-      this.game.scheduler.add(modal);
     } else if (contents instanceof Ladder) {
-      const nextLevelResponse = res => {
+      const nextLevelResponse = this.buildModalCallback(res => {
         if (res) {
           this.game.nextLevel();
         }
-        this.game.rebuild();
-      };
+      });
       const modal = new Modal(this.game.display, nextLevelResponse, 'Are you ready to climb higher?',
         20, 20, 5, modalChoices.yn);
-      this.game.scheduler.add(modal);
+    } else {
+      this.resolver();
     }
   }
 

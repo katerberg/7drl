@@ -10,15 +10,8 @@ export default class Modal {
     this.addOutline();
     this.clear();
     this.addText(text);
-    this.resolver = () => {};
     this.modalChoices = modalChoices;
-  }
-
-  act() {
-    return new Promise(resolve => {
-      window.addEventListener('keydown', this);
-      this.resolver = resolve;
-    });
+    window.addEventListener('keydown', this);
   }
 
   handleEvent({keyCode}) {
@@ -26,9 +19,8 @@ export default class Modal {
       return;
     }
     const choices = this.modalChoices || {};
-    this.callback(choices[keyCode]);
     window.removeEventListener('keydown', this);
-    this.resolver();
+    this.callback(choices[keyCode]);
   }
 
   addOutline() {
