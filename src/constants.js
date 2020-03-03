@@ -5,14 +5,18 @@ export const colors = {
 };
 
 export const movementKeymap = {
-  38: 0, // Up
-  75: 0, // Up
+  38: 0, // Up 
+  75: 0, // Up (vim)
+  87: 0, // Up (wsad)
   39: 1, // Right
-  76: 1, // Right
+  76: 1, // Right (vim)
+  68: 1, // Right (wsad)
   40: 2, // Down
-  74: 2, // Down
+  74: 2, // Down (vim)
+  83: 2, // Down (wsad)
   37: 3, // Left
-  72: 3, // Left
+  72: 3, // Left (vim)
+  65: 3, // Left (wsad)
 };
 
 export const validKeymap = {
