@@ -44,8 +44,8 @@ class Player {
     }
   }
 
-  displayStat(stat) {
-    return `${this.stats[stat]}`.padStart(3);
+  displayStat(stat, gear) {
+    return `${this.stats[stat] + (gear ? gear.modifier : 0)}`.padStart(3);
   }
 
   release() {
@@ -76,9 +76,9 @@ class Player {
 
   handleOpenInventory() {
     const pickupResponse = this.buildModalCallback();
-    const gearText = `STR:${this.displayStat('strength')}    ${getDisplayText(this.gear.Weapon) || 'No weapon'}
-    DEX:${this.displayStat('dexterity')}    ${getDisplayText(this.gear.Armor) || 'No armor'}
-    HP: ${this.displayStat('maxHp')}    ${getDisplayText(this.gear.Amulet) || 'No amulet'}
+    const gearText = `STR:${this.displayStat('strength', this.gear.Weapon)}    ${getDisplayText(this.gear.Weapon) || 'No weapon'}
+    DEX:${this.displayStat('dexterity', this.gear.Armor)}    ${getDisplayText(this.gear.Armor) || 'No armor'}
+    HP: ${this.displayStat('maxHp', this.gear.Amulet)}    ${getDisplayText(this.gear.Amulet) || 'No amulet'}
     XP: ${`${this.xp}`.padStart(3)}`;
     new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
   }
