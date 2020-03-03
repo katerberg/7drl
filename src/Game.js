@@ -122,7 +122,7 @@ export default class Game {
   }
 
   clearMessage() {
-    for (let i = 0; i < dimensions.WIDTH - 3; i++) {
+    for (let i = 0; i < dimensions.WIDTH - 15; i++) {
       this.display.draw(i, 0, ' ');
     }
   }

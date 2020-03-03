@@ -36,6 +36,7 @@ class Player {
       console.log(`Keycode is ${keyCode}`); // eslint-disable-line no-console
       return;
     }
+    this.game.clearMessage();
     if (keyCode in movementKeymap) {
       this.handleMovement(keyCode);
     } else if (validKeymap[keyCode] === 'Gear') {
@@ -52,6 +53,7 @@ class Player {
   }
 
   takeDamage(damage, enemy) {
+    this.game.sendMessage(`A ${enemy.type.toLowerCase()} hit you for ${damage} damage`);
     this.currentHp -= damage;
     if (this.currentHp <= 0) {
       this.currentHp = 0;
