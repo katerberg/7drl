@@ -154,13 +154,13 @@ export default class Game {
     this.scheduler.add(this.player, true);
     this.level += 1;
     this.enemies.length = 0;
+    this.generateMap();
+    this.drawWalls();
+    this.drawMap();
     for (let i = 0; i < this.level; i++) {
       this.enemies.push(this.createActor(Enemy, ['Demon', RNG.getItem(demons)]));
       this.scheduler.add(this.enemies[i], true);
     }
-    this.generateMap();
-    this.drawWalls();
-    this.drawMap();
     if (!this.map[this.player.coordinates]) {
       const key = this.popOpenFreeSpace();
       const [x, y] = key.split(',').map(i => parseInt(i, 10));
