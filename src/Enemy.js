@@ -1,4 +1,5 @@
 import {v4 as uuid} from 'uuid';
+import {Path} from 'rot-js';
 import {colors, symbols} from './constants';
 
 class Enemy {
@@ -7,6 +8,12 @@ class Enemy {
     this.id = uuid();
     this.x = x;
     this.y = y;
+    this.stats = {
+      strength: 1,
+      dexterity: 0,
+      maxHp: 3,
+    }
+    this.currentHp = this.stats.maxHp;
     this.draw(x, y);
   }
 
@@ -15,7 +22,22 @@ class Enemy {
   }
 
   act() {
-    this.draw();
+    const playerX = this.game.player.x;
+    const playerY = this.game.player.y;
+    const aStarCallback = (x, y) => `${x},${y}` in this.game.map;
+    const aStar = new Path.AStar(playerX, playerY, aStarCallback, {topology: 8});
+    const path = [];
+    const pathCallback = (x, y) => path.push([x, y]);
+    aStar.compute(this.x, this.y, pathCallback);
+    path.shift();
+    if (path[0]) {
+      const [nextX, nextY] = path[0];
+      if (nextX === playerX && nextY === playerY) {
+        this.game.player.takeDamage(this.stats.strength);
+      } else {
+        this.draw(nextX, nextY);
+      }
+    }
   }
 
   draw(x, y) {
@@ -30,3 +52,4 @@ class Enemy {
 
 
 export default Enemy;
+

@@ -47,6 +47,11 @@ class Player {
     return `${this.stats[stat]}`.padStart(3);
   }
 
+  takeDamage(damage) {
+    this.currentHp -= damage;
+    this.draw();
+  }
+
   buildModalCallback(callback) {
     window.removeEventListener('keydown', this);
     return (res) => {

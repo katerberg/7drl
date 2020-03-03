@@ -139,16 +139,10 @@ export default class Game {
     }
   }
 
-  createPlayer() {
+  createActor(Actor) {
     const key = this.popOpenFreeSpace();
     const [x, y] = key.split(',').map(i => parseInt(i, 10));
-    return new Player(this, x, y);
-  }
-
-  createEnemy() {
-    const key = this.popOpenFreeSpace();
-    const [x, y] = key.split(',').map(i => parseInt(i, 10));
-    return new Enemy(this, x, y);
+    return new Actor(this, x, y);
   }
 
   async nextTurn() {
@@ -161,12 +155,10 @@ export default class Game {
   }
 
   async init() {
-    this.player = this.createPlayer();
-    this.enemies.push(this.createEnemy());
-    this.enemies.push(this.createEnemy());
-    this.enemies.push(this.createEnemy());
+    this.player = this.createActor(Player);
     this.scheduler.add(this.player, true);
-    this.enemies.forEach(e => this.scheduler.add(e));
+    this.enemies.push(this.createActor(Enemy));
+    this.enemies.forEach(e => this.scheduler.add(e, true));
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();
       if (!good) {
