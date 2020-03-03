@@ -3,16 +3,18 @@ import {Path} from 'rot-js';
 import {colors, symbols} from './constants';
 
 class Enemy {
-  constructor(game, x, y) {
+  constructor(game, x, y, type, name) {
     this.game = game;
     this.id = uuid();
     this.x = x;
     this.y = y;
+    this.name = name;
+    this.type = type;
     this.stats = {
       strength: 1,
       dexterity: 0,
       maxHp: 3,
-    }
+    };
     this.currentHp = this.stats.maxHp;
     this.draw(x, y);
   }
@@ -31,9 +33,9 @@ class Enemy {
     aStar.compute(this.x, this.y, pathCallback);
     path.shift();
     if (path[0]) {
-      const [nextX, nextY] = path[0];
+      const [[nextX, nextY]] = path;
       if (nextX === playerX && nextY === playerY) {
-        this.game.player.takeDamage(this.stats.strength);
+        this.game.player.takeDamage(this.stats.strength, this);
       } else {
         this.draw(nextX, nextY);
       }
@@ -43,7 +45,7 @@ class Enemy {
   draw(x, y) {
     const newX = x || this.x;
     const newY = y || this.y;
-    this.game.redraw(this.x, this.y);
+    this.game.redrawSpace(this.x, this.y);
     this.game.display.draw(newX, newY, symbols.ENEMY, colors.RED);
     this.x = newX;
     this.y = newY;

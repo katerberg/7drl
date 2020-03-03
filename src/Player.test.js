@@ -8,7 +8,7 @@ describe('Player', () => {
     it('populates coordinates', () => {
 
       const result = new Player({
-        redraw: sinon.stub(),
+        redrawSpace: sinon.stub(),
         display: {
           draw: sinon.stub(),
           drawText: sinon.stub(),
@@ -22,7 +22,7 @@ describe('Player', () => {
       const draw = sinon.stub();
 
       const result = new Player({
-        redraw: sinon.stub(),
+        redrawSpace: sinon.stub(),
         display: {
           draw,
           drawText: sinon.stub(),
@@ -44,7 +44,7 @@ describe('Player', () => {
       player = new Player({
         map,
         retrieveContents: sinon.stub(),
-        redraw: sinon.stub(),
+        redrawSpace: sinon.stub(),
         clearMessage: sinon.stub(),
         display: {
           draw: drawMock,
@@ -70,7 +70,7 @@ describe('Player', () => {
 
       expect(player.x).to.equal(2);
       expect(player.y).to.equal(4);
-      expect(player.game.redraw).to.have.been.calledWithExactly(2, 5);
+      expect(player.game.redrawSpace).to.have.been.calledWithExactly(2, 5);
       expect(drawMock).to.have.been.calledWithExactly(2, 4, '@', colors.YELLOW);
     });
 

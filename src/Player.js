@@ -47,13 +47,24 @@ class Player {
     return `${this.stats[stat]}`.padStart(3);
   }
 
-  takeDamage(damage) {
+  release() {
+    window.removeEventListener('keydown', this);
+  }
+
+  takeDamage(damage, enemy) {
     this.currentHp -= damage;
+    if (this.currentHp <= 0) {
+      this.currentHp = 0;
+    }
     this.draw();
+    if (this.currentHp === 0) {
+      this.release();
+      this.game.loseGame(enemy);
+    }
   }
 
   buildModalCallback(callback) {
-    window.removeEventListener('keydown', this);
+    this.release();
     return (res) => {
       callback && callback(res);
       this.game.rebuild();
@@ -127,13 +138,12 @@ class Player {
   draw(x, y) {
     const newX = x || this.x;
     const newY = y || this.y;
-    this.game.redraw(this.x, this.y);
+    this.game.redrawSpace(this.x, this.y);
     this.game.display.draw(newX, newY, symbols.PLAYER, colors.YELLOW);
     this.x = newX;
     this.y = newY;
     this.drawHp();
   }
 }
-
 
 export default Player;

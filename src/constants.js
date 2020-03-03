@@ -2,6 +2,7 @@ export const colors = {
   YELLOW: '#ff0',
   GREEN: '#0f0',
   RED: '#f00',
+  WHITE: '#fff',
 };
 
 export const movementKeymap = {
@@ -35,7 +36,7 @@ export const symbols = {
   CACHE: '$',
   OPEN: ' ',
   PLAYER: '@',
-  ENEMY: 'G',
+  ENEMY: 'D',
   MODAL_CORNER_TOP_LEFT: '◸',
   MODAL_CORNER_TOP_RIGHT: '◹',
   MODAL_CORNER_BOTTOM_LEFT: '◺',

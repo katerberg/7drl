@@ -1,15 +1,22 @@
 import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
+import {demons} from './static/demons';
 import Player from './Player';
 import Enemy from './Enemy';
 import Cache from './Cache';
 import Ladder from './Ladder';
+import Modal from './modal';
 import {dimensions, symbols, colors} from './constants';
 
 export default class Game {
 
   constructor() {
     this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
+    this.resetAll();
+    document.body.appendChild(this.display.getContainer());
+  }
+
+  resetAll() {
     this.map = {};
     this.level = 0;
     this.player = null;
@@ -18,13 +25,16 @@ export default class Game {
     this.freeCells = [];
     this.caches = {};
     this.scheduler = new Scheduler.Simple();
-    document.body.appendChild(this.display.getContainer());
+    this.generateMap();
+    this.drawWalls();
+    this.drawMap();
+    this.init();
   }
 
   rebuild() {
     this.drawWalls();
     this.drawMap();
-    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER, colors.RED);
+    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER, colors.WHITE);
     this.player.draw();
     this.enemies.forEach(e => e.draw());
   }
@@ -88,10 +98,10 @@ export default class Game {
       const isCache = this.caches[key];
       this.display.draw(x, y, isCache ? symbols.CACHE : symbols.OPEN, isCache ? colors.GREEN : null);
     });
-    this.display.draw(this.exit.x, this.exit.y, symbols.LADDER, colors.RED);
+    this.display.draw(this.exit.x, this.exit.y, symbols.LADDER, colors.WHITE);
   }
 
-  redraw(x, y) {
+  redrawSpace(x, y) {
     let symbol = symbols.OPEN;
     let color = null;
     const keyFormat = `${x},${y}`;
@@ -125,10 +135,29 @@ export default class Game {
     delete this.caches[coordinate];
   }
 
+
+  buildModalCallback() {
+    return () => {
+      this.resetAll();
+    };
+  }
+
+  loseGame(enemy) {
+    this.scheduler.clear();
+    const loseResponse = this.buildModalCallback();
+    const text = `You have lost after taking a brutal blow from a roaming ${enemy.type} named ${enemy.name}.`;
+    new Modal(this.display, loseResponse, text, 40, 20, 5);
+  }
+
   nextLevel() {
     this.scheduler.clear();
     this.scheduler.add(this.player, true);
     this.level += 1;
+    this.enemies.length = 0;
+    for (let i = 0; i < this.level; i++) {
+      this.enemies.push(this.createActor(Enemy, ['Demon', RNG.getItem(demons)]));
+      this.scheduler.add(this.enemies[i], true);
+    }
     this.generateMap();
     this.drawWalls();
     this.drawMap();
@@ -139,10 +168,10 @@ export default class Game {
     }
   }
 
-  createActor(Actor) {
+  createActor(Actor, params = []) {
     const key = this.popOpenFreeSpace();
     const [x, y] = key.split(',').map(i => parseInt(i, 10));
-    return new Actor(this, x, y);
+    return new Actor(this, x, y, ...params);
   }
 
   async nextTurn() {
@@ -157,7 +186,7 @@ export default class Game {
   async init() {
     this.player = this.createActor(Player);
     this.scheduler.add(this.player, true);
-    this.enemies.push(this.createActor(Enemy));
+    this.enemies.push(this.createActor(Enemy, ['Demon', RNG.getItem(demons)]));
     this.enemies.forEach(e => this.scheduler.add(e, true));
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();
