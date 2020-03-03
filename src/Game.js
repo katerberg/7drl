@@ -13,6 +13,7 @@ export default class Game {
     this.map = {};
     this.level = 0;
     this.player = null;
+    this.enemies = [];
     this.exit = null;
     this.freeCells = [];
     this.caches = {};
@@ -25,6 +26,7 @@ export default class Game {
     this.drawMap();
     this.display.draw(this.exit[0], this.exit[1], symbols.LADDER, colors.RED);
     this.player.draw();
+    this.enemies.forEach(e => e.draw());
   }
 
   generateMap() {
@@ -143,6 +145,12 @@ export default class Game {
     return new Player(this, x, y);
   }
 
+  createEnemy() {
+    const key = this.popOpenFreeSpace();
+    const [x, y] = key.split(',').map(i => parseInt(i, 10));
+    return new Enemy(this, x, y);
+  }
+
   async nextTurn() {
     const actor = this.scheduler.next();
     if (!actor) {
@@ -154,8 +162,11 @@ export default class Game {
 
   async init() {
     this.player = this.createPlayer();
+    this.enemies.push(this.createEnemy());
+    this.enemies.push(this.createEnemy());
+    this.enemies.push(this.createEnemy());
     this.scheduler.add(this.player, true);
-    this.scheduler.add(new Enemy(this), true);
+    this.enemies.forEach(e => this.scheduler.add(e));
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();
       if (!good) {

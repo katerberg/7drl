@@ -5,7 +5,7 @@ export const colors = {
 };
 
 export const movementKeymap = {
-  38: 0, // Up 
+  38: 0, // Up
   75: 0, // Up (vim)
   87: 0, // Up (wsad)
   39: 1, // Right
@@ -35,6 +35,7 @@ export const symbols = {
   CACHE: '$',
   OPEN: ' ',
   PLAYER: '@',
+  ENEMY: 'G',
   MODAL_CORNER_TOP_LEFT: '◸',
   MODAL_CORNER_TOP_RIGHT: '◹',
   MODAL_CORNER_BOTTOM_LEFT: '◺',
