@@ -126,7 +126,7 @@ class Player {
   drawHp() {
     this.game.display.drawText(dimensions.WIDTH - 15, 0, 'HP:');
     const currentHpString = `${this.currentHp}`;
-    const maxHpString = `${this.stats.maxHp}`;
+    const maxHpString = `${this.stats.maxHp + (this.gear.Amulet ? this.gear.Amulet.modifier : 0)}`;
     const start = dimensions.WIDTH - 12;
     for (let i = 0; i < currentHpString.length; i++) {
       this.game.display.draw(start + i, 0, currentHpString[i]);
