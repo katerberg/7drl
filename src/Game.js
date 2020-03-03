@@ -6,7 +6,7 @@ import Enemy from './Enemy';
 import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './modal';
-import {dimensions, symbols, colors} from './constants';
+import {dimensions, symbols, colors, modalChoices} from './constants';
 
 export default class Game {
 
@@ -41,7 +41,7 @@ export default class Game {
 
   generateMap() {
     this.freeCells.length = 0;
-    this.caches.length = 0;
+    this.caches = {};
     this.map = {};
     const digger = new Map.Digger(dimensions.WIDTH, dimensions.HEIGHT - 1, {dugPercentage: 0.9});
 
@@ -110,7 +110,7 @@ export default class Game {
       color = colors.GREEN;
     } else if (this.exit.matches(keyFormat)) {
       symbol = symbols.LADDER;
-      color = colors.RED;
+      color = colors.WHITE;
     } else if (!this.map[keyFormat]) {
       symbol = symbols.WALL;
     }
@@ -146,7 +146,7 @@ export default class Game {
     this.scheduler.clear();
     const loseResponse = this.buildModalCallback();
     const text = `You have lost after taking a brutal blow from a roaming ${enemy.type} named ${enemy.name}.`;
-    new Modal(this.display, loseResponse, text, 40, 20, 5);
+    new Modal(this.display, loseResponse, text, 40, 20, 5, modalChoices.yn);
   }
 
   nextLevel() {

@@ -2,7 +2,7 @@ export const colors = {
   YELLOW: '#ff0',
   GREEN: '#0f0',
   RED: '#f00',
-  WHITE: '#fff',
+  WHITE: '#fefefe',
 };
 
 export const movementKeymap = {
