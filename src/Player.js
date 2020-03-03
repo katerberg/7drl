@@ -83,6 +83,16 @@ class Player {
     new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
   }
 
+  equip(gear) {
+    if (gear.type === 'Amulet') {
+      if (this.gear.Amulet) {
+        this.currentHp -= this.gear.Amulet.modifier;
+      }
+      this.currentHp += gear.modifier;
+    }
+    this.gear[gear.type] = gear;
+  }
+
   handleMovement(keyCode) {
     const [xChange, yChange] = DIRS[4][movementKeymap[keyCode]];
     const newX = this.x + xChange;
@@ -97,7 +107,7 @@ class Player {
       const pickupResponse = this.buildModalCallback(res => {
         if (res) {
           this.game.removeCache(this.coordinates);
-          this.gear[contents.type] = contents;
+          this.equip(contents);
         }
         this.resolver();
       });
@@ -134,6 +144,9 @@ class Player {
     this.game.display.draw(start + currentHpString.length, 0, '/');
     for (let i = 0; i < maxHpString.length; i++) {
       this.game.display.draw(start + i + 1 + currentHpString.length, 0, maxHpString[i]);
+    }
+    for (let i = 0; i <= 6 - maxHpString.length - currentHpString.length; i++) {
+      this.game.display.draw(start + i + 1 + currentHpString.length + maxHpString.length, 0, ' ');
     }
   }
 
