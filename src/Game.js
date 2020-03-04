@@ -152,6 +152,13 @@ export default class Game {
     new Modal(this.display, () => this.resetAll(), text, 40, 20, 5, modalChoices.yn);
   }
 
+  populateEnemies() {
+    for (let i = 0; i <= this.level; i++) {
+      this.enemies.push(this.createActor(Enemy, ['Demon', RNG.getItem(demons)]));
+      this.scheduler.add(this.enemies[i], true);
+    }
+  }
+
   nextLevel() {
     this.scheduler.clear();
     this.scheduler.add(this.player, true);
@@ -160,10 +167,7 @@ export default class Game {
     this.generateMap();
     this.drawWalls();
     this.drawMap();
-    for (let i = 0; i < this.level; i++) {
-      this.enemies.push(this.createActor(Enemy, ['Demon', RNG.getItem(demons)]));
-      this.scheduler.add(this.enemies[i], true);
-    }
+    this.populateEnemies();
     if (!this.map[this.player.coordinates]) {
       const key = this.popOpenFreeSpace();
       const [x, y] = key.split(',').map(i => parseInt(i, 10));
@@ -189,8 +193,7 @@ export default class Game {
   async init() {
     this.player = this.createActor(Player);
     this.scheduler.add(this.player, true);
-    this.enemies.push(this.createActor(Enemy, ['Demon', RNG.getItem(demons)]));
-    this.enemies.forEach(e => this.scheduler.add(e, true));
+    this.populateEnemies();
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();
       if (!good) {
