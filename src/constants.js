@@ -3,6 +3,7 @@ export const colors = {
   GREEN: '#0f0',
   RED: '#f00',
   WHITE: '#fefefe',
+  ORANGE: '#FF7034',
   FADED_WHITE: '#444',
 };
 
@@ -68,6 +69,7 @@ export const enemies = {
       dexterity: 0,
       maxHp: 3,
     },
+    color: colors.RED,
   },
   TROLL: {
     type: 'Troll',
@@ -76,6 +78,7 @@ export const enemies = {
       dexterity: 0,
       maxHp: 25,
     },
+    color: colors.RED,
   },
   DRAGON: {
     type: 'Dragon',
@@ -84,5 +87,15 @@ export const enemies = {
       dexterity: 10,
       maxHp: 200,
     },
+    color: colors.RED,
+  },
+  BALROG: {
+    type: 'Balrog',
+    stats: {
+      strength: 40,
+      dexterity: 40,
+      maxHp: 500,
+    },
+    color: colors.ORANGE,
   },
 };

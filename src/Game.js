@@ -55,7 +55,9 @@ export default class Game {
       this.map[key] = symbols.OPEN;
     };
     digger.create(digCallback.bind(this));
-    this.addExitLadder();
+    if (this.level !== 10) {
+      this.addExitLadder();
+    }
     const numberOfCaches = this.level + 1;
     for (let i = 0; i < numberOfCaches; i++) {
       const space = this.popOpenFreeSpace();
@@ -153,27 +155,38 @@ export default class Game {
     new Modal(this.display, () => this.resetAll(), text, 40, 20, 5, modalChoices.yn);
   }
 
+  winGame() {
+    this.scheduler.clear();
+    const text = 'You have defeated Gothmog, Lord of the Balrogs! Would you like to play again?';
+    new Modal(this.display, () => this.resetAll(), text, 40, 20, 5, modalChoices.yn);
+  }
+
   populateEnemies() {
-    if (this.level < 10) {
+    if (this.level < 9) {
       for (let i = 0; i <= this.level; i++) {
         const enemy = this.createActor(Enemy, [enemies.GOBLIN, RNG.getItem(goblins)]);
         this.enemies.push(enemy);
         this.scheduler.add(enemy, true);
       }
     }
-    if (this.level >= 5 && this.level < 15) {
-      for (let i = 0; i <= this.level - 5; i++) {
+    if (this.level >= 3) {
+      for (let i = 0; i <= this.level - 3; i++) {
         const enemy = this.createActor(Enemy, [enemies.TROLL, RNG.getItem(trolls)]);
         this.enemies.push(enemy);
         this.scheduler.add(enemy, true);
       }
     }
-    if (this.level > 10) {
-      for (let i = 0; i <= this.level - 10; i++) {
+    if (this.level > 7) {
+      for (let i = 0; i <= this.level - 7; i++) {
         const enemy = this.createActor(Enemy, [enemies.DRAGON, RNG.getItem(dragons)]);
         this.enemies.push(enemy);
         this.scheduler.add(enemy, true);
       }
+    }
+    if (this.level === 10) {
+      const enemy = this.createActor(Enemy, [enemies.BALROG, 'Gothmog']);
+      this.enemies.push(enemy);
+      this.scheduler.add(enemy, true);
     }
   }
 

@@ -1,6 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import {Path, RNG} from 'rot-js';
-import {colors} from './constants';
+import {enemies} from './constants';
 
 class Enemy {
   constructor(game, x, y, enemy, name) {
@@ -13,6 +13,7 @@ class Enemy {
     this.stats = {
       ...enemy.stats,
     };
+    this.color = enemy.color;
     this.currentHp = this.stats.maxHp;
     this.draw(x, y);
   }
@@ -44,7 +45,7 @@ class Enemy {
     const newX = x || this.x;
     const newY = y || this.y;
     this.game.redrawSpace(this.x, this.y);
-    this.game.display.draw(newX, newY, this.type.split('')[0], colors.RED);
+    this.game.display.draw(newX, newY, this.type.split('')[0], this.color);
     this.x = newX;
     this.y = newY;
   }
@@ -62,6 +63,9 @@ class Enemy {
     this.currentHp -= damage;
     if (this.currentHp <= 0) {
       this.game.removeEnemy(this);
+      if (this.type === enemies.BALROG.type) {
+        this.game.winGame();
+      }
     }
   }
 }
