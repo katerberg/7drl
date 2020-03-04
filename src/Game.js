@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
-import {demons} from './static/demons';
+import {demons} from './static/enemies';
 import Player from './Player';
 import Enemy from './Enemy';
 import Cache from './Cache';
@@ -56,7 +56,8 @@ export default class Game {
     };
     digger.create(digCallback.bind(this));
     this.addExitLadder();
-    for (let i = 0; i < 10; i++) {
+    const numberOfCaches = this.level + 1;
+    for (let i = 0; i < numberOfCaches; i++) {
       const space = this.popOpenFreeSpace();
       this.caches[space] = new Cache(this.level);
     }
