@@ -100,6 +100,7 @@ class Player {
       this.currentHp += gear.modifier;
     }
     this.gear[gear.type] = gear;
+    this.game.sendMessage(`New ${gear.type} equipped (${gear.modifier >= 0 ? '+' : ''}${gear.modifier})`);
   }
 
   handleMovement(keyCode) {
