@@ -6,7 +6,7 @@ import Enemy from './Enemy';
 import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './modal';
-import {dimensions, symbols, colors, modalChoices} from './constants';
+import {dimensions, enemies, symbols, colors, modalChoices} from './constants';
 
 export default class Game {
 
@@ -153,9 +153,12 @@ export default class Game {
   }
 
   populateEnemies() {
-    for (let i = 0; i <= this.level; i++) {
-      this.enemies.push(this.createActor(Enemy, ['Demon', RNG.getItem(demons)]));
-      this.scheduler.add(this.enemies[i], true);
+    if (this.level < 5) {
+      for (let i = 0; i <= this.level; i++) {
+        const enemy = this.createActor(Enemy, [enemies.DEMON, RNG.getItem(demons)]);
+        this.enemies.push(enemy);
+        this.scheduler.add(enemy, true);
+      }
     }
   }
 

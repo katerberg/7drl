@@ -58,3 +58,14 @@ export const gearTypes = {
   Weapon: 5,
   Amulet: 1,
 };
+
+export const enemies = {
+  DEMON: {
+    type: 'Demon',
+    stats: {
+      strength: 1,
+      dexterity: 0,
+      maxHp: 3,
+    },
+  },
+};

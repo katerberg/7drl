@@ -3,17 +3,15 @@ import {Path} from 'rot-js';
 import {colors, symbols} from './constants';
 
 class Enemy {
-  constructor(game, x, y, type, name) {
+  constructor(game, x, y, enemy, name) {
     this.game = game;
     this.id = uuid();
     this.x = x;
     this.y = y;
     this.name = name;
-    this.type = type;
+    this.type = enemy.type;
     this.stats = {
-      strength: 1,
-      dexterity: 0,
-      maxHp: 3,
+      ...enemy.stats,
     };
     this.currentHp = this.stats.maxHp;
     this.draw(x, y);
