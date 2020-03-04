@@ -39,11 +39,15 @@ export default class Game {
     this.enemies.forEach(e => e.draw());
   }
 
+  get digPercentage() {
+    return this.level * 0.1;
+  }
+
   generateMap() {
     this.freeCells.length = 0;
     this.caches = {};
     this.map = {};
-    const digger = new Map.Digger(dimensions.WIDTH, dimensions.HEIGHT - 1, {dugPercentage: 0.9});
+    const digger = new Map.Digger(dimensions.WIDTH, dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage});
 
     const digCallback = (x, y, value) => {
       if (value) {
