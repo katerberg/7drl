@@ -51,6 +51,8 @@ class Player {
     this.game.clearMessage();
     if (keyCode in movementKeymap) {
       this.handleMovement(keyCode);
+    } else if (validKeymap[keyCode] === 'Menu') {
+      this.handleOpenMenu(this.listenForInput);
     } else if (validKeymap[keyCode] === 'Gear') {
       this.handleOpenInventory();
     }
@@ -60,8 +62,12 @@ class Player {
     return `${this.stats[stat] + (gear ? gear.modifier : 0)}`.padStart(3);
   }
 
-  release() {
+  releaseInput() {
     window.removeEventListener('keydown', this);
+  }
+
+  listenForInput() {
+    window.addEventListener('keydown', this);
   }
 
   calculateDamage(incomingDamage, source) {
@@ -97,17 +103,17 @@ class Player {
     }
     this.draw();
     if (this.currentHp === 0) {
-      this.release();
+      this.releaseInput();
       this.game.loseGame(enemy);
     }
   }
 
   buildModalCallback(callback) {
-    this.release();
+    this.releaseInput();
     return (res) => {
       callback && callback(res);
       this.game.rebuild();
-      window.addEventListener('keydown', this);
+      this.listenForInput();
     };
   }
 
@@ -118,6 +124,11 @@ class Player {
     HP: ${this.displayStat('maxHp', this.gear.Amulet)}    ${getDisplayText(this.gear.Amulet) || 'No amulet'}
     XP: ${`${this.xp}`.padStart(3)}`;
     new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
+  }
+
+  handleOpenMenu(callback) {
+    this.releaseInput();
+    new Modal(this.game.display, this.buildModalCallback(), 'This is a menu', 30, 25, 5);
   }
 
   equip(gear) {
@@ -171,7 +182,7 @@ class Player {
 
   act() {
     return new Promise(resolve => {
-      window.addEventListener('keydown', this);
+      this.listenForInput();
       this.resolver = resolve;
     });
   }

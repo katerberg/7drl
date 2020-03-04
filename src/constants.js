@@ -26,6 +26,8 @@ export const validKeymap = {
   ...movementKeymap,
   71: 'Gear', // G
   73: 'Gear', // I
+  27: 'Menu', // Esc
+  77: 'Menu', // M
 };
 
 export const dimensions = {

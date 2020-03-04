@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Level complexity scales
+- Menu
+
 ## [0.0.5] - 2020-03-04
 
 ### Added
