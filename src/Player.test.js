@@ -45,6 +45,7 @@ describe('Player', () => {
         map,
         retrieveContents: sinon.stub(),
         redrawSpace: sinon.stub(),
+        getEnemyAt: sinon.stub(),
         clearMessage: sinon.stub(),
         display: {
           draw: drawMock,

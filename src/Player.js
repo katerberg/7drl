@@ -110,10 +110,9 @@ class Player {
     if (this.game.map[newSpace] === undefined) {
       return;
     }
-    const enemyInSpace = this.game.getEnemyAt(newSpace)
+    const enemyInSpace = this.game.getEnemyAt(newSpace);
     if (enemyInSpace) {
       enemyInSpace.takeDamage(this.getDamage(), this);
-      console.log('swinging @ ' + enemyInSpace.id);
       return this.resolver();
     }
     this.draw(newX, newY);

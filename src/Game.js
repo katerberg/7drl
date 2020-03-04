@@ -145,18 +145,10 @@ export default class Game {
     this.enemies = this.enemies.filter(e => e.id !== enemy.id);
   }
 
-
-  buildModalCallback() {
-    return () => {
-      this.resetAll();
-    };
-  }
-
   loseGame(enemy) {
     this.scheduler.clear();
-    const loseResponse = this.buildModalCallback();
-    const text = `You have lost after taking a brutal blow from a roaming ${enemy.type} named ${enemy.name}.`;
-    new Modal(this.display, loseResponse, text, 40, 20, 5, modalChoices.yn);
+    const text = `You have lost after taking a brutal blow from a roaming ${enemy.type} named ${enemy.name}.\n\nWould you like to play again?`;
+    new Modal(this.display, () => this.resetAll(), text, 40, 20, 5, modalChoices.yn);
   }
 
   nextLevel() {
