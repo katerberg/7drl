@@ -1,4 +1,4 @@
-import {DIRS} from 'rot-js';
+import {DIRS, RNG} from 'rot-js';
 import {colors, dimensions, modalChoices, movementKeymap, validKeymap, symbols} from './constants';
 import Cache from './Cache';
 import Ladder from './Ladder';
@@ -64,8 +64,33 @@ class Player {
     window.removeEventListener('keydown', this);
   }
 
-  takeDamage(damage, enemy) {
-    this.game.sendMessage(`A ${enemy.type.toLowerCase()} hit you for ${damage} damage`);
+  calculateDamage(incomingDamage, source) {
+    const dexDiff = this.stats.dexterity - source.stats.dexterity;
+    if (RNG.getPercentage() < dexDiff) {
+      return null;
+    }
+    if (this.gear.Armor) {
+      const percent = RNG.getPercentage();
+      const damage = Math.ceil(incomingDamage - this.gear.Armor.modifier * percent / 100);
+      if (damage < 0) {
+        return 0;
+      }
+      return damage;
+    }
+
+    return incomingDamage;
+  }
+
+  takeDamage(incomingDamage, enemy) {
+    const damage = this.calculateDamage(incomingDamage, enemy);
+    this.game.clearMessage();
+    if (damage === null) {
+      this.game.sendMessage(`You dodged the attack from a ${enemy.type.toLowerCase()}`);
+    } else if (damage === 0) {
+      this.game.sendMessage(`Your armor absorbed all the damage from a ${enemy.type.toLowerCase()}`);
+    } else {
+      this.game.sendMessage(`A ${enemy.type.toLowerCase()} hit you for ${damage} damage`);
+    }
     this.currentHp -= damage;
     if (this.currentHp <= 0) {
       this.currentHp = 0;

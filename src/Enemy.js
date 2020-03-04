@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {Path} from 'rot-js';
+import {Path, RNG} from 'rot-js';
 import {colors} from './constants';
 
 class Enemy {
@@ -49,7 +49,16 @@ class Enemy {
     this.y = newY;
   }
 
-  takeDamage(damage) {
+  calculateDamage(incomingDamage, source) {
+    const dexDiff = this.stats.dexterity - source.stats.dexterity;
+    if (RNG.getPercentage() < dexDiff) {
+      return 0;
+    }
+    return incomingDamage;
+  }
+
+  takeDamage(incomingDamage, source) {
+    const damage = this.calculateDamage(incomingDamage, source);
     this.currentHp -= damage;
     if (this.currentHp <= 0) {
       this.game.removeEnemy(this);

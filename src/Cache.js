@@ -29,13 +29,13 @@ class Cache {
     this.hp = 0;
     switch (this.type) { // eslint-disable-line default-case
     case 'Armor':
-      this.defense = RNG.getUniformInt(level + 1, level + 10);
+      this.defense = RNG.getUniformInt(level, level + 5);
       break;
     case 'Weapon':
-      this.attack = RNG.getUniformInt(level + 1, level + 10);
+      this.attack = RNG.getUniformInt(level, level + 5);
       break;
     case 'Amulet':
-      this.hp = RNG.getUniformInt(level + 1, level + 20);
+      this.hp = RNG.getUniformInt(level, level + 20);
       break;
     }
   }
