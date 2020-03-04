@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
-import {demons} from './static/enemies';
+import {goblins, dragons, trolls} from './static/enemies';
 import Player from './Player';
 import Enemy from './Enemy';
 import Cache from './Cache';
@@ -153,9 +153,23 @@ export default class Game {
   }
 
   populateEnemies() {
-    if (this.level < 5) {
+    if (this.level < 10) {
       for (let i = 0; i <= this.level; i++) {
-        const enemy = this.createActor(Enemy, [enemies.DEMON, RNG.getItem(demons)]);
+        const enemy = this.createActor(Enemy, [enemies.GOBLIN, RNG.getItem(goblins)]);
+        this.enemies.push(enemy);
+        this.scheduler.add(enemy, true);
+      }
+    }
+    if (this.level >= 5 && this.level < 15) {
+      for (let i = 0; i <= this.level - 5; i++) {
+        const enemy = this.createActor(Enemy, [enemies.TROLL, RNG.getItem(trolls)]);
+        this.enemies.push(enemy);
+        this.scheduler.add(enemy, true);
+      }
+    }
+    if (this.level > 10) {
+      for (let i = 0; i <= this.level - 10; i++) {
+        const enemy = this.createActor(Enemy, [enemies.DRAGON, RNG.getItem(dragons)]);
         this.enemies.push(enemy);
         this.scheduler.add(enemy, true);
       }

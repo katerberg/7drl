@@ -60,12 +60,28 @@ export const gearTypes = {
 };
 
 export const enemies = {
-  DEMON: {
-    type: 'Demon',
+  GOBLIN: {
+    type: 'Goblin',
     stats: {
       strength: 1,
       dexterity: 0,
       maxHp: 3,
+    },
+  },
+  TROLL: {
+    type: 'Troll',
+    stats: {
+      strength: 5,
+      dexterity: 0,
+      maxHp: 25,
+    },
+  },
+  DRAGON: {
+    type: 'Dragon',
+    stats: {
+      strength: 20,
+      dexterity: 10,
+      maxHp: 200,
     },
   },
 };

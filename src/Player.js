@@ -41,6 +41,9 @@ class Player {
   }
 
   handleEvent({keyCode}) {
+    if (keyCode === 81) {
+      this.game.nextLevel();
+    }
     if (!(keyCode in validKeymap)) {
       console.log(`Keycode is ${keyCode}`); // eslint-disable-line no-console
       return;
