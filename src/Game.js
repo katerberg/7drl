@@ -100,14 +100,14 @@ export default class Game {
     Object.keys(this.map).forEach(key => {
       const [x, y] = key.split(',').map(i => parseInt(i, 10));
       const isCache = this.caches[key];
-      this.display.draw(x, y, isCache ? symbols.CACHE : symbols.OPEN, isCache ? colors.GREEN : null);
+      this.display.draw(x, y, isCache ? symbols.CACHE : symbols.OPEN, isCache ? colors.GREEN : colors.FADED_WHITE);
     });
     this.display.draw(this.exit.x, this.exit.y, symbols.LADDER, colors.WHITE);
   }
 
   redrawSpace(x, y) {
     let symbol = symbols.OPEN;
-    let color = null;
+    let color = colors.FADED_WHITE;
     const keyFormat = `${x},${y}`;
     if (this.caches[keyFormat]) {
       symbol = symbols.CACHE;
@@ -117,6 +117,7 @@ export default class Game {
       color = colors.WHITE;
     } else if (!this.map[keyFormat]) {
       symbol = symbols.WALL;
+      color - colors.WHITE;
     }
     this.display.draw(x, y, symbol, color);
   }
