@@ -20,7 +20,11 @@ class Player {
       strength: 1,
       dexterity: 1,
     };
-    this.gear = {};
+    this.gear = {
+      Weapon: null,
+      Armor: null,
+      Amulet: null,
+    };
     this.currentHp = 5;
     this.xp = 0;
     this.draw(x, y);
@@ -29,6 +33,11 @@ class Player {
 
   get coordinates() {
     return `${this.x},${this.y}`;
+  }
+
+  getDamage() {
+    const modifier = this.gear.Weapon ? this.gear.Weapon.modifier : 0;
+    return this.stats.strength + modifier;
   }
 
   handleEvent({keyCode}) {
@@ -100,6 +109,12 @@ class Player {
     const newSpace = `${newX},${newY}`;
     if (this.game.map[newSpace] === undefined) {
       return;
+    }
+    const enemyInSpace = this.game.getEnemyAt(newSpace)
+    if (enemyInSpace) {
+      enemyInSpace.takeDamage(this.getDamage(), this);
+      console.log('swinging @ ' + enemyInSpace.id);
+      return this.resolver();
     }
     this.draw(newX, newY);
     const contents = this.game.retrieveContents(this.coordinates);

@@ -50,6 +50,13 @@ class Enemy {
     this.x = newX;
     this.y = newY;
   }
+
+  takeDamage(damage) {
+    this.currentHp -= damage;
+    if (this.currentHp <= 0) {
+      this.game.removeEnemy(this);
+    }
+  }
 }
 
 

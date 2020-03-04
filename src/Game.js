@@ -80,6 +80,11 @@ export default class Game {
     return this.freeCells.splice(index, 1)[0];
   }
 
+  getEnemyAt(key) {
+    const [x, y] = key.split(',').map(i => parseInt(i, 10));
+    return this.enemies.filter(e => e.x === x && e.y === y)[0];
+  }
+
   drawWalls() {
     for (let i = 0; i < dimensions.WIDTH; i++) {
       for (let j = 1; j < dimensions.HEIGHT; j++) {
@@ -92,9 +97,7 @@ export default class Game {
 
   drawMap() {
     Object.keys(this.map).forEach(key => {
-      const parts = key.split(',');
-      const x = parseInt(parts[0], 10);
-      const y = parseInt(parts[1], 10);
+      const [x, y] = key.split(',').map(i => parseInt(i, 10));
       const isCache = this.caches[key];
       this.display.draw(x, y, isCache ? symbols.CACHE : symbols.OPEN, isCache ? colors.GREEN : null);
     });
@@ -133,6 +136,13 @@ export default class Game {
 
   removeCache(coordinate) {
     delete this.caches[coordinate];
+  }
+
+  removeEnemy(enemy) {
+    this.sendMessage(`${enemy.type} died`);
+    this.scheduler.remove(enemy);
+    this.redrawSpace(enemy.x, enemy.y);
+    this.enemies = this.enemies.filter(e => e.id !== enemy.id);
   }
 
 
