@@ -1,4 +1,4 @@
-import Modal from './Modal';
+import {buildInstructionsModal} from './modalBuilder';
 import {symbols, validMenuKeymap} from './constants';
 
 export default class Menu {
@@ -41,12 +41,7 @@ export default class Menu {
   }
 
   handleOpenInstructions() {
-    const insructions = `
-    Wander the depths of the dungeon collecting items and defeating foes to grant you experience until you find and are able to defeat the dark master of the pit...
-
-    Movement: ▲ ▼ ◄ ► / WSAD / KJHL
-    `;
-    new Modal(this.game.display, this.buildModalCallback(), insructions, 40, 20, 5);
+    buildInstructionsModal(this.game.display, this.buildModalCallback());
   }
 
   handleCancel() {

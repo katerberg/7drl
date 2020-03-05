@@ -1,6 +1,7 @@
 import 'regenerator-runtime/runtime';
 import {Display, Map, RNG, Scheduler} from 'rot-js';
 import {goblins, dragons, trolls} from './static/enemies';
+import {buildInstructionsModal} from './modalBuilder';
 import Player from './Player';
 import Enemy from './Enemy';
 import Cache from './Cache';
@@ -14,6 +15,11 @@ export default class Game {
     this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
     this.resetAll();
     document.body.appendChild(this.display.getContainer());
+    this.player.releaseInput();
+    buildInstructionsModal(this.display, () => {
+      this.rebuild();
+      this.player.listenForInput();
+    });
   }
 
   resetAll() {

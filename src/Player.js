@@ -68,7 +68,6 @@ class Player {
   }
 
   listenForInput() {
-
     window.addEventListener('keydown', this);
   }
 
