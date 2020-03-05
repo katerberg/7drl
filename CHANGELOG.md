@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Level complexity scales
 - Menu
+- Instructions
+- Start screen
 
 ## [0.0.5] - 2020-03-04
 
