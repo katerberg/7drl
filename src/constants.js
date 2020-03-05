@@ -116,8 +116,8 @@ export const enemies = {
   BALROG: {
     type: 'Balrog',
     stats: {
-      strength: 40,
-      dexterity: 40,
+      strength: 30,
+      dexterity: 50,
       maxHp: 500,
     },
     xp: 0,

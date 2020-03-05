@@ -7,11 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.6] - 2020-03-05
+
+### Added
+
 - Level complexity scales
 - Menu
 - Instructions
 - Start screen
 - Developer mode
+- XP and Leveling
 
 ## [0.0.5] - 2020-03-04
 
@@ -52,7 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copying over tutorial result from rot.js
 - Testing framework
 
-[unreleased]: https://github.com/katerberg/7drl/compare/v0.0.5...HEAD
+[unreleased]: https://github.com/katerberg/7drl/compare/v0.0.6...HEAD
+[0.0.6]: https://github.com/katerberg/7drl/releases/tag/v0.0.6
 [0.0.5]: https://github.com/katerberg/7drl/releases/tag/v0.0.5
 [0.0.4]: https://github.com/katerberg/7drl/releases/tag/v0.0.4
 [0.0.3]: https://github.com/katerberg/7drl/releases/tag/v0.0.3

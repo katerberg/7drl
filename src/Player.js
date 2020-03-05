@@ -42,8 +42,11 @@ class Player {
   }
 
   handleEvent({keyCode}) {
-    if (keyCode === 81 && this.game.devmode) {
+    if (keyCode === 81 && this.game.devmode) { // Q
       this.game.nextLevel();
+    }
+    if (keyCode === 69 && this.game.devmode) { // E
+      this.levelUp();
     }
     if (!(keyCode in validKeymap)) {
       if (this.game.devmode) {
@@ -111,8 +114,20 @@ class Player {
     }
   }
 
+  levelUp() {
+    this.stats.maxHp += 5;
+    this.stats.strength += 1;
+    this.stats.dexterity += 1;
+    this.currentHp = this.stats.maxHp;
+    this.drawHp();
+  }
+
   addXp(amount) {
+    const formerLevel = this.level;
     this.xp += amount;
+    if (this.level !== formerLevel) {
+      this.levelUp();
+    }
   }
 
   buildModalCallback(callback) {
