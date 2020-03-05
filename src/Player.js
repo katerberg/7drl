@@ -1,5 +1,5 @@
 import {DIRS, RNG} from 'rot-js';
-import {colors, dimensions, modalChoices, movementKeymap, validKeymap, symbols} from './constants';
+import {colors, xpLevels, dimensions, modalChoices, movementKeymap, validKeymap, symbols} from './constants';
 import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './Modal';
@@ -123,13 +123,17 @@ class Player {
       this.listenForInput();
     };
   }
+  get level() {
+    return Object.keys(xpLevels).find(k => xpLevels[k] > this.xp) - 1;
+  }
 
   handleOpenInventory() {
     const pickupResponse = this.buildModalCallback();
     const gearText = `STR:${this.displayStat('strength', this.gear.Weapon)}    ${getDisplayText(this.gear.Weapon) || 'No weapon'}
     DEX:${this.displayStat('dexterity', this.gear.Armor)}    ${getDisplayText(this.gear.Armor) || 'No armor'}
     HP: ${this.displayStat('maxHp', this.gear.Amulet)}    ${getDisplayText(this.gear.Amulet) || 'No amulet'}
-    XP: ${`${this.xp}`.padStart(3)}`;
+    XP: ${`${this.xp}`.padStart(3)}
+    LVL: ${`${this.level}`.padStart(2)}`;
     new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
   }
 
