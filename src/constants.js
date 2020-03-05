@@ -77,9 +77,20 @@ export const enemies = {
     type: 'Goblin',
     stats: {
       strength: 1,
-      dexterity: 0,
+      dexterity: 1,
       maxHp: 3,
     },
+    xp: 1,
+    color: colors.RED,
+  },
+  SKELETON: {
+    type: 'Skeleton',
+    stats: {
+      strength: 2,
+      dexterity: 5,
+      maxHp: 3,
+    },
+    xp: 5,
     color: colors.RED,
   },
   TROLL: {
@@ -89,6 +100,7 @@ export const enemies = {
       dexterity: 0,
       maxHp: 25,
     },
+    xp: 10,
     color: colors.RED,
   },
   DRAGON: {
@@ -98,6 +110,7 @@ export const enemies = {
       dexterity: 10,
       maxHp: 200,
     },
+    xp: 30,
     color: colors.RED,
   },
   BALROG: {
@@ -107,6 +120,29 @@ export const enemies = {
       dexterity: 40,
       maxHp: 500,
     },
+    xp: 0,
     color: colors.ORANGE,
   },
+};
+
+export const xpLevels = {
+  1: 1,
+  2: 3,
+  3: 9,
+  4: 22,
+  5: 42,
+  6: 72,
+  7: 115,
+  8: 171,
+  9: 243,
+  10: 334,
+  11: 444,
+  12: 576,
+  13: 733,
+  14: 915,
+  15: 1125,
+  16: 1366,
+  17: 4913,
+  18: 5832,
+  19: 6859,
 };

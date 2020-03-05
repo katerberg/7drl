@@ -13,6 +13,7 @@ class Enemy {
     this.stats = {
       ...enemy.stats,
     };
+    this.xp = enemy.xp;
     this.color = enemy.color;
     this.currentHp = this.stats.maxHp;
     this.draw(x, y);
@@ -62,6 +63,7 @@ class Enemy {
     const damage = this.calculateDamage(incomingDamage, source);
     this.currentHp -= damage;
     if (this.currentHp <= 0) {
+      source.addXp(this.xp);
       this.game.removeEnemy(this);
       if (this.type === enemies.BALROG.type) {
         this.game.winGame();

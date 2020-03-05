@@ -111,6 +111,10 @@ class Player {
     }
   }
 
+  addXp(amount) {
+    this.xp += amount;
+  }
+
   buildModalCallback(callback) {
     this.releaseInput();
     return (res) => {
