@@ -23,16 +23,26 @@ class Enemy {
     return `${this.x},${this.y}`;
   }
 
-  act() {
-    const playerX = this.game.player.x;
-    const playerY = this.game.player.y;
+  get path() {
     const aStarCallback = (x, y) => `${x},${y}` in this.game.map;
-    const aStar = new Path.AStar(playerX, playerY, aStarCallback, {topology: 8});
+    const topology = this.type === 'Troll' ? 4 : 8;
+    const aStar = new Path.AStar(this.game.player.x, this.game.player.y, aStarCallback, {topology});
     const path = [];
     const pathCallback = (x, y) => path.push([x, y]);
     aStar.compute(this.x, this.y, pathCallback);
     path.shift();
-    if (path[0]) {
+    return path;
+  }
+
+  isEnemyInSpace(x, y) {
+     return this.game.enemies.filter(e => e.id !== this.id && e.x === x && e.y === y).length;
+  }
+
+  act() {
+    const playerX = this.game.player.x;
+    const playerY = this.game.player.y;
+    const {path} = this;
+    if (path[0] && !this.isEnemyInSpace(path[0][0], path[0][1])) {
       const [[nextX, nextY]] = path;
       if (nextX === playerX && nextY === playerY) {
         this.game.player.takeDamage(this.stats.strength, this);
