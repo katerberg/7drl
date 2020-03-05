@@ -115,10 +115,10 @@ class Player {
   }
 
   levelUp() {
-    this.stats.maxHp += 5;
+    this.stats.maxHp += 3;
     this.stats.strength += 1;
     this.stats.dexterity += 1;
-    this.currentHp = this.stats.maxHp + this.gear.Amulet ? this.gear.Amulet.modifier : 0;
+    this.currentHp = this.stats.maxHp + (this.gear.Amulet ? this.gear.Amulet.modifier : 0);
     this.drawHp();
   }
 

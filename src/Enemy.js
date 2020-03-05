@@ -76,6 +76,7 @@ class Enemy {
       source.addXp(this.xp);
       this.game.removeEnemy(this);
       if (this.type === enemies.BALROG.type) {
+        source.releaseInput();
         this.game.winGame();
       }
     }
