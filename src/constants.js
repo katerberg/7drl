@@ -30,6 +30,14 @@ export const validKeymap = {
   77: 'Menu', // M
 };
 
+export const validMenuKeymap = {
+  ...movementKeymap,
+  27: 'Cancel', // Esc
+  77: 'Cancel', // M
+  13: 'Select', // Enter
+  32: 'Select', // Space
+};
+
 export const dimensions = {
   HEIGHT: 25,
   WIDTH: 80,
@@ -48,6 +56,7 @@ export const symbols = {
   MODAL_Y: '|',
   MODAL_X: '-',
   LADDER: '▤',
+  BULLET: '▶',
 };
 
 export const modalChoices = {

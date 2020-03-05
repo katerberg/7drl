@@ -5,7 +5,7 @@ import Player from './Player';
 import Enemy from './Enemy';
 import Cache from './Cache';
 import Ladder from './Ladder';
-import Modal from './modal';
+import Modal from './Modal';
 import {dimensions, enemies, symbols, colors, modalChoices} from './constants';
 
 export default class Game {

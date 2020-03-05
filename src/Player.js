@@ -2,7 +2,8 @@ import {DIRS, RNG} from 'rot-js';
 import {colors, dimensions, modalChoices, movementKeymap, validKeymap, symbols} from './constants';
 import Cache from './Cache';
 import Ladder from './Ladder';
-import Modal from './modal';
+import Modal from './Modal';
+import Menu from './Menu';
 
 function getDisplayText(gear) {
   if (gear) {
@@ -52,7 +53,7 @@ class Player {
     if (keyCode in movementKeymap) {
       this.handleMovement(keyCode);
     } else if (validKeymap[keyCode] === 'Menu') {
-      this.handleOpenMenu(this.listenForInput);
+      this.handleOpenMenu();
     } else if (validKeymap[keyCode] === 'Gear') {
       this.handleOpenInventory();
     }
@@ -67,6 +68,7 @@ class Player {
   }
 
   listenForInput() {
+
     window.addEventListener('keydown', this);
   }
 
@@ -126,9 +128,8 @@ class Player {
     new Modal(this.game.display, pickupResponse, gearText, 70, 5, 5);
   }
 
-  handleOpenMenu(callback) {
-    this.releaseInput();
-    new Modal(this.game.display, this.buildModalCallback(), 'This is a menu', 30, 25, 5);
+  handleOpenMenu() {
+    new Menu(this.game, this.buildModalCallback());
   }
 
   equip(gear) {
@@ -173,7 +174,7 @@ class Player {
           this.game.nextLevel();
         }
       });
-      new Modal(this.game.display, nextLevelResponse, 'Are you ready to climb higher?',
+      new Modal(this.game.display, nextLevelResponse, 'Are you ready to delve deeper?',
         20, 20, 5, modalChoices.yn);
     } else {
       this.resolver();
