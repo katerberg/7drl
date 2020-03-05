@@ -35,7 +35,7 @@ class Enemy {
   }
 
   isEnemyInSpace(x, y) {
-     return this.game.enemies.filter(e => e.id !== this.id && e.x === x && e.y === y).length;
+    return this.game.enemies.filter(e => e.id !== this.id && e.x === x && e.y === y).length;
   }
 
   act() {
