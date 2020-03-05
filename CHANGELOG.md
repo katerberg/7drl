@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Menu
 - Instructions
 - Start screen
+- Developer mode
 
 ## [0.0.5] - 2020-03-04
 

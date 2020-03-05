@@ -13,13 +13,16 @@ export default class Game {
 
   constructor() {
     this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
+    this.devmode = window.location.href.indexOf('devmode') > -1;
     this.resetAll();
     document.body.appendChild(this.display.getContainer());
-    this.player.releaseInput();
-    buildInstructionsModal(this.display, () => {
-      this.rebuild();
-      this.player.listenForInput();
-    });
+    if (!this.devmode) {
+      this.player.releaseInput();
+      buildInstructionsModal(this.display, () => {
+        this.rebuild();
+        this.player.listenForInput();
+      });
+    }
   }
 
   resetAll() {
