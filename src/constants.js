@@ -5,7 +5,7 @@ export const colors = {
   RED: '#f00',
   WHITE: '#fefefe',
   ORANGE: '#FF7034',
-  FADED_WHITE: '#444',
+  FADED_WHITE: '#777',
 };
 
 export const movementKeymap = {

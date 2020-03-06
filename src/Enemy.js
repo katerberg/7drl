@@ -10,6 +10,7 @@ class Enemy {
     this.y = y;
     this.name = name;
     this.type = enemy.type;
+    [this.symbol] = this.type.split('');
     this.stats = {
       ...enemy.stats,
     };
@@ -54,10 +55,9 @@ class Enemy {
   draw(x, y) {
     const newX = x || this.x;
     const newY = y || this.y;
-    this.game.redrawSpace(this.x, this.y);
-    this.game.display.draw(newX, newY, this.type.split('')[0], this.color);
     this.x = newX;
     this.y = newY;
+    this.game.drawFov();
   }
 
   calculateDamage(incomingDamage, source) {

@@ -1,5 +1,5 @@
 import {DIRS, RNG} from 'rot-js';
-import {colors, xpLevels, dimensions, modalChoices, movementKeymap, validKeymap} from './constants';
+import {xpLevels, dimensions, modalChoices, movementKeymap, validKeymap} from './constants';
 import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './Modal';
@@ -233,8 +233,7 @@ class Player {
     const oldY = this.y;
     this.x = x || oldX;
     this.y = y || oldY;
-    this.game.redrawSpace(oldX, oldY);
-    this.game.redrawSpace(this.x, this.y);
+    this.game.drawFov();
     this.drawHp();
   }
 }

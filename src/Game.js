@@ -1,7 +1,9 @@
 import 'regenerator-runtime/runtime';
-import {Display, Map, RNG, Scheduler} from 'rot-js';
+import {Display, FOV, Map, RNG, Scheduler} from 'rot-js';
 import {goblins, dragons, trolls, skeletons} from './static/enemies';
 import {buildInstructionsModal} from './modalBuilder';
+import tinycolor from 'tinycolor2';
+import {v4 as uuid} from 'uuid';
 import Player from './Player';
 import Enemy from './Enemy';
 import Cache from './Cache';
@@ -28,6 +30,7 @@ export default class Game {
   resetAll() {
     this.map = {};
     this.level = 0;
+    this.seenSpaces = {};
     this.player = null;
     this.enemies = [];
     this.exit = null;
@@ -36,13 +39,11 @@ export default class Game {
     this.scheduler = new Scheduler.Simple();
     this.generateMap();
     this.drawWalls();
-    this.drawMap();
     this.init();
   }
 
   rebuild() {
     this.drawWalls();
-    this.drawMap();
     this.display.draw(this.exit[0], this.exit[1], symbols.LADDER, colors.WHITE);
     this.player.draw();
     this.enemies.forEach(e => e.draw());
@@ -61,7 +62,7 @@ export default class Game {
     const digCallback = (x, y, value) => {
       if (value) {
         return;
-      } /* Do not store walls */
+      }
 
       const key = `${x},${y + 1}`;
       this.freeCells.push(key);
@@ -75,15 +76,6 @@ export default class Game {
     for (let i = 0; i < numberOfCaches; i++) {
       const space = this.popOpenFreeSpace();
       this.caches[space] = new Cache(this.level);
-    }
-    this.drawLevel();
-  }
-
-  drawLevel() {
-    this.display.draw(dimensions.WIDTH - 4, 0, 'L');
-    const levelString = `${this.level}`.padStart(3, 0);
-    for (let i = 3; i > 0; i--) {
-      this.display.draw(dimensions.WIDTH - i, 0, levelString[levelString.length - i]);
     }
   }
 
@@ -104,7 +96,7 @@ export default class Game {
   drawWalls() {
     for (let i = 0; i < dimensions.WIDTH; i++) {
       for (let j = 1; j < dimensions.HEIGHT; j++) {
-        if (!this.map[`${i},${j}`]) {
+        if (!this.seenSpaces[`${i},${j}`]) {
           this.display.draw(i, j, symbols.WALL);
         }
       }
@@ -115,21 +107,22 @@ export default class Game {
     return this.map[`${x},${y}`];
   }
 
-  drawMap() {
-    Object.keys(this.map).forEach(key => {
-      const [x, y] = key.split(',').map(i => parseInt(i, 10));
-      const isCache = this.caches[key];
-      this.display.draw(x, y, isCache ? symbols.CACHE : symbols.OPEN, isCache ? colors.GREEN : colors.FADED_WHITE);
+  drawFov() {
+    const currentRun = uuid();
+    const fov = new FOV.PreciseShadowcasting(this.lightPasses.bind(this));
+    fov.compute(this.player.x, this.player.y, 500, (x, y) => {
+      const key = `${x},${y}`;
+      this.seenSpaces[key] = currentRun;
+      this.redrawSpace(x, y, !this.map[key]);
     });
-    this.display.draw(this.exit.x, this.exit.y, symbols.LADDER, colors.WHITE);
+    Object.keys(this.seenSpaces).filter(s => this.seenSpaces[s] !== currentRun).forEach(s => {
+      const [x, y] = s.split(',').map(c => parseInt(c, 10));
+      this.redrawSpace(x, y, true);
+    });
   }
 
-  redrawSpace(x, y, backgroundColor = colors.BLACK) {
-    // Const fov = new FOV.PreciseShadowcasting(this.game.lightPasses.bind(this.game));
-    // Fov.compute(this.x, this.y, 5, (x, y, r, visibility) => {
-    //   Const color = this.game.map[`${x},${y}`] ? '#aa0' : colors.BLACK;
-    //   This.game.redrawSpace(x, y, color);
-    // });
+
+  redrawSpace(x, y, faded) {
     let symbol = symbols.OPEN;
     let color = colors.FADED_WHITE;
     const keyFormat = `${x},${y}`;
@@ -139,6 +132,9 @@ export default class Game {
     } else if (this.caches[keyFormat]) {
       symbol = symbols.CACHE;
       color = colors.GREEN;
+    } else if (!faded && this.enemies.find(e => e.x === x && e.y === y)) {
+      const enemy = this.enemies.find(e => e.x === x && e.y === y);
+      ({color, symbol} = enemy);
     } else if (this.exit.matches(keyFormat)) {
       symbol = symbols.LADDER;
       color = colors.WHITE;
@@ -146,7 +142,8 @@ export default class Game {
       symbol = symbols.WALL;
       color - colors.WHITE;
     }
-    this.display.draw(x, y, symbol, color, backgroundColor);
+    color = faded ? tinycolor(color).darken(30).toString() : color;
+    this.display.draw(x, y, symbol, color);
   }
 
   sendMessage(message) {
@@ -170,7 +167,7 @@ export default class Game {
   removeEnemy(enemy) {
     this.sendMessage(`${enemy.type} died`);
     this.scheduler.remove(enemy);
-    this.redrawSpace(enemy.x, enemy.y);
+    this.drawFov();
     this.enemies = this.enemies.filter(e => e.id !== enemy.id);
   }
 
@@ -233,16 +230,17 @@ export default class Game {
     this.scheduler.clear();
     this.scheduler.add(this.player, true);
     this.level += 1;
+    this.seenSpaces = {};
     this.enemies.length = 0;
     this.generateMap();
-    this.drawWalls();
-    this.drawMap();
     this.populateEnemies();
     if (!this.map[this.player.coordinates]) {
       const key = this.popOpenFreeSpace();
       const [x, y] = key.split(',').map(i => parseInt(i, 10));
       this.player.draw(x, y);
     }
+    this.drawWalls();
+    this.drawFov();
   }
 
   createActor(Actor, params = []) {
@@ -262,9 +260,10 @@ export default class Game {
 
   async init() {
     this.player = this.createActor(Player);
-    this.player.draw();
     this.scheduler.add(this.player, true);
     this.populateEnemies();
+    this.drawWalls();
+    this.drawFov();
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();
       if (!good) {
