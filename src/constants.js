@@ -73,7 +73,6 @@ export const modalChoices = {
 export const gearTypes = {
   Armor: 5,
   Weapon: 5,
-  Potion: 3,
   Amulet: 1,
 };
 
@@ -93,7 +92,7 @@ export const enemies = {
     stats: {
       strength: 2,
       dexterity: 5,
-      maxHp: 3,
+      maxHp: 4,
     },
     xp: 3,
     color: colors.RED,

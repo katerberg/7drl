@@ -84,8 +84,8 @@ class Player {
       return null;
     }
     if (this.gear.Armor) {
-      const percent = RNG.getPercentage();
-      const damage = Math.ceil(incomingDamage - this.gear.Armor.modifier * percent / 100);
+      const percent = RNG.getPercentage() / 100;
+      const damage = Math.ceil(incomingDamage - this.gear.Armor.modifier * percent);
       if (damage < 0) {
         return 0;
       }

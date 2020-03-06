@@ -57,7 +57,7 @@ export default class Game {
     this.freeCells.length = 0;
     this.caches = {};
     this.map = {};
-    const digger = new Map.Digger(Math.ceil(dimensions.WIDTH - 30 + this.level * 3), dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage, corridorLength: [0,5]});
+    const digger = new Map.Digger(Math.ceil(dimensions.WIDTH - 30 + this.level * 3), dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage, corridorLength: [0, 5]});
 
     const digCallback = (x, y, value) => {
       if (value) {
@@ -167,15 +167,15 @@ export default class Game {
   removeEnemy(enemy) {
     this.sendMessage(`${enemy.type} died`);
     this.scheduler.remove(enemy);
-    this.drawFov();
     this.enemies = this.enemies.filter(e => e.id !== enemy.id);
+    this.drawFov();
   }
 
   playAgainCallback(res) {
-      this.resetAll();
-      if (!res) {
-        this.player.handleOpenMenu();
-      }
+    this.resetAll();
+    if (!res) {
+      this.player.handleOpenMenu();
+    }
   }
 
   loseGame(enemy) {
