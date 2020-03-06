@@ -1,7 +1,6 @@
 import {expect} from 'chai';
 import sinon from 'sinon';
 import Player from './Player';
-import {colors} from './constants';
 
 describe('Player', () => {
   describe('constuctor', () => {
@@ -19,17 +18,16 @@ describe('Player', () => {
     });
 
     it('draws and initializes resolver', () => {
-      const draw = sinon.stub();
+      const drawFov = sinon.stub();
 
       const result = new Player({
         redrawSpace: sinon.stub(),
+        drawFov,
         display: {
-          draw,
           drawText: sinon.stub(),
         }}, 1, 5);
 
       expect(typeof result.resolver).to.equal('function');
-      expect(draw).to.have.been.calledWithExactly(1, 5, '@', colors.YELLOW);
     });
   });
 
@@ -47,8 +45,9 @@ describe('Player', () => {
         redrawSpace: sinon.stub(),
         getEnemyAt: sinon.stub(),
         clearMessage: sinon.stub(),
+        drawFov: drawMock,
         display: {
-          draw: drawMock,
+          draw: sinon.stub(),
           drawText: sinon.stub(),
         },
       }, 2, 5);
@@ -71,8 +70,7 @@ describe('Player', () => {
 
       expect(player.x).to.equal(2);
       expect(player.y).to.equal(4);
-      expect(player.game.redrawSpace).to.have.been.calledWithExactly(2, 5);
-      expect(drawMock).to.have.been.calledWithExactly(2, 4, '@', colors.YELLOW);
+      expect(drawMock).to.have.been.calledWithExactly();
     });
 
     it('disallows moving if it will be off the map', () => {
