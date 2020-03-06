@@ -94,7 +94,6 @@ export default class Game {
   }
 
   drawWalls() {
-    console.log(this.seenSpaces);
     for (let i = 0; i < dimensions.WIDTH; i++) {
       for (let j = 1; j < dimensions.HEIGHT; j++) {
         if (!this.seenSpaces[`${i},${j}`]) {
@@ -131,7 +130,7 @@ export default class Game {
       symbol = symbols.PLAYER;
       color = colors.YELLOW;
     } else if (this.caches[keyFormat]) {
-      symbol = symbols.CACHE;
+      symbol = symbols[this.caches[keyFormat].type.toUpperCase()];
       color = colors.GREEN;
     } else if (!faded && this.enemies.find(e => e.x === x && e.y === y)) {
       const enemy = this.enemies.find(e => e.x === x && e.y === y);

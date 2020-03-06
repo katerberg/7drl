@@ -47,6 +47,9 @@ export const dimensions = {
 export const symbols = {
   WALL: '█',
   CACHE: '$',
+  WEAPON: 'Ψ',
+  ARMOR: 'Θ',
+  AMULET: 'ϙ',
   OPEN: '.',
   PLAYER: '@',
   ENEMY: 'D',
@@ -91,7 +94,7 @@ export const enemies = {
       dexterity: 5,
       maxHp: 3,
     },
-    xp: 5,
+    xp: 3,
     color: colors.RED,
   },
   TROLL: {
@@ -128,7 +131,7 @@ export const enemies = {
 
 export const xpLevels = {
   1: 1,
-  2: 3,
+  2: 5,
   3: 9,
   4: 22,
   5: 42,
