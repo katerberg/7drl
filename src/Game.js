@@ -57,7 +57,7 @@ export default class Game {
     this.freeCells.length = 0;
     this.caches = {};
     this.map = {};
-    const digger = new Map.Digger(dimensions.WIDTH, dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage});
+    const digger = new Map.Digger(Math.ceil(dimensions.WIDTH - 30 + this.level * 3), dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage, corridorLength: [0,5]});
 
     const digCallback = (x, y, value) => {
       if (value) {
@@ -171,16 +171,23 @@ export default class Game {
     this.enemies = this.enemies.filter(e => e.id !== enemy.id);
   }
 
+  playAgainCallback(res) {
+      this.resetAll();
+      if (!res) {
+        this.player.handleOpenMenu();
+      }
+  }
+
   loseGame(enemy) {
     this.scheduler.clear();
     const text = `You have lost after taking a brutal blow from a roaming ${enemy.type} named ${enemy.name}.\n\nWould you like to play again?`;
-    new Modal(this.display, () => this.resetAll(), text, 40, 20, 5, modalChoices.yn);
+    new Modal(this.display, this.playAgainCallback.bind(this), text, 40, 20, 5, modalChoices.yn);
   }
 
   winGame() {
     this.scheduler.clear();
     const text = 'You have defeated Gothmog, Lord of the Balrogs! Would you like to play again?';
-    new Modal(this.display, () => this.resetAll(), text, 40, 20, 5, modalChoices.yn);
+    new Modal(this.display, this.playAgainCallback.bind(this), text, 40, 20, 5, modalChoices.yn);
   }
 
   populateEnemies() {

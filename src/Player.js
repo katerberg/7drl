@@ -121,7 +121,7 @@ class Player {
     this.stats.maxHp += 3;
     this.stats.strength += 1;
     this.stats.dexterity += 1;
-    this.currentHp = this.effectiveMaxHp - Math.floor(currentDamage / 2);
+    this.currentHp = this.effectiveMaxHp - Math.ceil(currentDamage / 2);
     this.drawHp();
   }
 
