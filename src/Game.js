@@ -94,6 +94,7 @@ export default class Game {
   }
 
   drawWalls() {
+    console.log(this.seenSpaces);
     for (let i = 0; i < dimensions.WIDTH; i++) {
       for (let j = 1; j < dimensions.HEIGHT; j++) {
         if (!this.seenSpaces[`${i},${j}`]) {
@@ -230,10 +231,10 @@ export default class Game {
     this.scheduler.clear();
     this.scheduler.add(this.player, true);
     this.level += 1;
-    this.seenSpaces = {};
     this.enemies.length = 0;
     this.generateMap();
     this.populateEnemies();
+    this.seenSpaces = {};
     if (!this.map[this.player.coordinates]) {
       const key = this.popOpenFreeSpace();
       const [x, y] = key.split(',').map(i => parseInt(i, 10));
