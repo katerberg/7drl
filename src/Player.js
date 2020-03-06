@@ -1,5 +1,5 @@
 import {DIRS, RNG} from 'rot-js';
-import {colors, xpLevels, dimensions, modalChoices, movementKeymap, validKeymap, symbols} from './constants';
+import {colors, xpLevels, dimensions, modalChoices, movementKeymap, validKeymap} from './constants';
 import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './Modal';
@@ -28,7 +28,6 @@ class Player {
     };
     this.currentHp = 5;
     this.xp = 0;
-    this.draw(x, y);
     this.resolver = () => {};
   }
 
@@ -230,12 +229,12 @@ class Player {
   }
 
   draw(x, y) {
-    const newX = x || this.x;
-    const newY = y || this.y;
+    const oldX = this.x;
+    const oldY = this.y;
+    this.x = x || oldX;
+    this.y = y || oldY;
+    this.game.redrawSpace(oldX, oldY);
     this.game.redrawSpace(this.x, this.y);
-    this.game.display.draw(newX, newY, symbols.PLAYER, colors.YELLOW);
-    this.x = newX;
-    this.y = newY;
     this.drawHp();
   }
 }

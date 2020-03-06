@@ -111,6 +111,10 @@ export default class Game {
     }
   }
 
+  lightPasses(x, y) {
+    return this.map[`${x},${y}`];
+  }
+
   drawMap() {
     Object.keys(this.map).forEach(key => {
       const [x, y] = key.split(',').map(i => parseInt(i, 10));
@@ -120,11 +124,19 @@ export default class Game {
     this.display.draw(this.exit.x, this.exit.y, symbols.LADDER, colors.WHITE);
   }
 
-  redrawSpace(x, y) {
+  redrawSpace(x, y, backgroundColor = colors.BLACK) {
+    // Const fov = new FOV.PreciseShadowcasting(this.game.lightPasses.bind(this.game));
+    // Fov.compute(this.x, this.y, 5, (x, y, r, visibility) => {
+    //   Const color = this.game.map[`${x},${y}`] ? '#aa0' : colors.BLACK;
+    //   This.game.redrawSpace(x, y, color);
+    // });
     let symbol = symbols.OPEN;
     let color = colors.FADED_WHITE;
     const keyFormat = `${x},${y}`;
-    if (this.caches[keyFormat]) {
+    if (this.player.x === x && this.player.y === y) {
+      symbol = symbols.PLAYER;
+      color = colors.YELLOW;
+    } else if (this.caches[keyFormat]) {
       symbol = symbols.CACHE;
       color = colors.GREEN;
     } else if (this.exit.matches(keyFormat)) {
@@ -134,7 +146,7 @@ export default class Game {
       symbol = symbols.WALL;
       color - colors.WHITE;
     }
-    this.display.draw(x, y, symbol, color);
+    this.display.draw(x, y, symbol, color, backgroundColor);
   }
 
   sendMessage(message) {
@@ -178,6 +190,7 @@ export default class Game {
     if (this.level < 9) {
       for (let i = 0; i <= (this.level > 5 ? 5 : this.level); i++) {
         const enemy = this.createActor(Enemy, [enemies.GOBLIN, RNG.getItem(goblins)]);
+        enemy.draw();
         this.enemies.push(enemy);
         this.scheduler.add(enemy, true);
       }
@@ -187,6 +200,7 @@ export default class Game {
       const numberOfSkeletons = sub > 0 ? this.level - sub : this.level;
       for (let i = 0; i < numberOfSkeletons; i++) {
         const enemy = this.createActor(Enemy, [enemies.SKELETON, RNG.getItem(skeletons)]);
+        enemy.draw();
         this.enemies.push(enemy);
         this.scheduler.add(enemy, true);
       }
@@ -194,6 +208,7 @@ export default class Game {
     if (this.level >= 4) {
       for (let i = 0; i < this.level - 3; i++) {
         const enemy = this.createActor(Enemy, [enemies.TROLL, RNG.getItem(trolls)]);
+        enemy.draw();
         this.enemies.push(enemy);
         this.scheduler.add(enemy, true);
       }
@@ -201,12 +216,14 @@ export default class Game {
     if (this.level > 7) {
       for (let i = 0; i <= this.level - 7; i++) {
         const enemy = this.createActor(Enemy, [enemies.DRAGON, RNG.getItem(dragons)]);
+        enemy.draw();
         this.enemies.push(enemy);
         this.scheduler.add(enemy, true);
       }
     }
     if (this.level === 10) {
       const enemy = this.createActor(Enemy, [enemies.BALROG, 'Gothmog']);
+      enemy.draw();
       this.enemies.push(enemy);
       this.scheduler.add(enemy, true);
     }
@@ -245,6 +262,7 @@ export default class Game {
 
   async init() {
     this.player = this.createActor(Player);
+    this.player.draw();
     this.scheduler.add(this.player, true);
     this.populateEnemies();
     while (1) { // eslint-disable-line no-constant-condition

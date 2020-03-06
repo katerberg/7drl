@@ -16,7 +16,6 @@ class Enemy {
     this.xp = enemy.xp;
     this.color = enemy.color;
     this.currentHp = this.stats.maxHp;
-    this.draw(x, y);
   }
 
   get coordinates() {
