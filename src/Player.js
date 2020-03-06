@@ -35,6 +35,9 @@ class Player {
     return `${this.x},${this.y}`;
   }
 
+  get effectiveMaxHp() {
+    return this.stats.maxHp + (this.gear.Amulet ? this.gear.Amulet.modifier : 0);
+  }
   getDamage() {
     const modifier = this.gear.Weapon ? this.gear.Weapon.modifier : 0;
     return this.stats.strength + modifier;
@@ -114,10 +117,11 @@ class Player {
   }
 
   levelUp() {
+    const currentDamage = this.effectiveMaxHp - this.currentHp;
     this.stats.maxHp += 3;
     this.stats.strength += 1;
     this.stats.dexterity += 1;
-    this.currentHp = this.stats.maxHp + (this.gear.Amulet ? this.gear.Amulet.modifier : 0);
+    this.currentHp = this.effectiveMaxHp - Math.floor(currentDamage / 2);
     this.drawHp();
   }
 

@@ -46,7 +46,7 @@ export const dimensions = {
 
 export const symbols = {
   WALL: '█',
-  CACHE: '$',
+  POTION: 'ɋ',
   WEAPON: 'Ψ',
   ARMOR: 'Θ',
   AMULET: 'ϙ',
@@ -73,6 +73,7 @@ export const modalChoices = {
 export const gearTypes = {
   Armor: 5,
   Weapon: 5,
+  Potion: 3,
   Amulet: 1,
 };
 
