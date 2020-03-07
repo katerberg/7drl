@@ -130,7 +130,7 @@ export default class Game {
     this.freeCells.length = 0;
     this.caches = {};
     this.map = {};
-    const digger = new Map.Digger(Math.ceil(dimensions.WIDTH - 30 + this.level * 3), dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage, corridorLength: [0, 5]});
+    const digger = new Map.Digger(Math.ceil(dimensions.WIDTH - 50 + ((this.level ^ 2) / 2)), dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage, corridorLength: [0, 5]});
 
     const digCallback = (x, y, value) => {
       if (value) {
@@ -145,7 +145,7 @@ export default class Game {
     if (this.level !== 10) {
       this.addExitLadder();
     }
-    const numberOfCaches = this.level + 1;
+    const numberOfCaches = Math.ceil(RNG.getNormal(0, this.level + 1));
     for (let i = 0; i < numberOfCaches; i++) {
       const space = this.popOpenFreeSpace();
       this.caches[space] = new Cache(this.level);

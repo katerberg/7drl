@@ -1493,5 +1493,4 @@ export const animals = ['Aardwolf',
   'Zebra',
   'Zebra',
   'Zorilla',
-  'Zorro',
   'Zorro'];

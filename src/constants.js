@@ -115,7 +115,7 @@ export const enemies = {
     stats: {
       strength: 17,
       dexterity: 10,
-      maxHp: 100,
+      maxHp: 70,
     },
     xp: 30,
     dropPercentage: 80,
