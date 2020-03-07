@@ -113,9 +113,9 @@ export const enemies = {
   DRAGON: {
     type: 'Dragon',
     stats: {
-      strength: 20,
+      strength: 17,
       dexterity: 10,
-      maxHp: 200,
+      maxHp: 100,
     },
     xp: 30,
     dropPercentage: 80,
@@ -124,9 +124,9 @@ export const enemies = {
   BALROG: {
     type: 'Balrog',
     stats: {
-      strength: 30,
+      strength: 25,
       dexterity: 50,
-      maxHp: 500,
+      maxHp: 300,
     },
     xp: 0,
     dropPercentage: 0,
