@@ -74,8 +74,8 @@ class Enemy {
     const damage = this.calculateDamage(incomingDamage, source);
     this.currentHp -= damage;
     if (this.currentHp <= 0) {
-      source.addXp(this.xp);
       this.game.removeEnemy(this);
+      source.addXp(this.xp);
       if (this.type === enemies.BALROG.type) {
         source.releaseInput();
         this.game.winGame();

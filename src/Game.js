@@ -147,6 +147,7 @@ export default class Game {
   }
 
   sendMessage(message) {
+    this.clearMessage();
     this.display.drawText(0, 0, message);
   }
 

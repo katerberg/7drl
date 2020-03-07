@@ -97,7 +97,6 @@ class Player {
 
   takeDamage(incomingDamage, enemy) {
     const damage = this.calculateDamage(incomingDamage, enemy);
-    this.game.clearMessage();
     if (damage === null) {
       this.game.sendMessage(`You dodged the attack from a ${enemy.type.toLowerCase()}`);
     } else if (damage === 0) {
@@ -129,6 +128,7 @@ class Player {
     const formerLevel = this.level;
     this.xp += amount;
     if (this.level !== formerLevel) {
+      this.game.sendMessage(`You are now level ${this.level}!`);
       this.levelUp();
     }
   }
