@@ -130,7 +130,7 @@ export default class Game {
     this.freeCells.length = 0;
     this.caches = {};
     this.map = {};
-    const digger = new Map.Digger(Math.ceil(dimensions.WIDTH - 50 + ((this.level ^ 2) / 2)), dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage, corridorLength: [0, 5]});
+    const digger = new Map.Digger(Math.ceil(dimensions.WIDTH - 50 + Math.pow(this.level, 2) / 2), dimensions.HEIGHT - 1, {dugPercentage: this.digPercentage, corridorLength: [0, 5]});
 
     const digCallback = (x, y, value) => {
       if (value) {
