@@ -1,5 +1,6 @@
 import {v4 as uuid} from 'uuid';
 import {Path, RNG} from 'rot-js';
+import Cache from './Cache';
 import {enemies} from './constants';
 
 class Enemy {
@@ -15,6 +16,7 @@ class Enemy {
       ...enemy.stats,
     };
     this.xp = enemy.xp;
+    this.item = enemy.dropPercentage > RNG.getPercentage() ? new Cache(this.game.level, 'Potion', 'healer', 0, 0, this.xp) : null;
     this.color = enemy.color;
     this.currentHp = this.stats.maxHp;
   }

@@ -165,7 +165,12 @@ export default class Game {
   }
 
   removeEnemy(enemy) {
-    this.sendMessage(`${enemy.type} died`);
+    const key = `${enemy.x},${enemy.y}`;
+    if (!this.caches[key]) {
+      this.caches[key] = enemy.item;
+    }
+    const itemDrop = this.caches[key];
+    this.sendMessage(`${enemy.type} died${itemDrop ? ', leaving behind a potion!' : ''}`);
     this.scheduler.remove(enemy);
     this.enemies = this.enemies.filter(e => e.id !== enemy.id);
     this.drawFov();

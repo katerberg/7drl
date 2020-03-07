@@ -186,15 +186,26 @@ class Player {
     this.draw(newX, newY);
     const contents = this.game.retrieveContents(this.coordinates);
     if (contents instanceof Cache) {
-      const pickupResponse = this.buildModalCallback(res => {
-        if (res) {
-          this.game.removeCache(this.coordinates);
-          this.equip(contents);
+      if (contents.type === 'Potion') {
+        this.game.sendMessage(`Tastes awful, but heals ${contents.modifiers.hp}.`);
+        this.currentHp += contents.modifiers.hp;
+        if (this.currentHp > this.effectiveMaxHp) {
+          this.currentHp = this.effectiveMaxHp;
         }
+        this.game.removeCache(this.coordinates);
+        this.drawHp();
         this.resolver();
-      });
-      new Modal(this.game.display, pickupResponse, `${contents.display}. Would you like to equip it?`,
-        20, 20, 5, modalChoices.yn);
+      } else {
+        const pickupResponse = this.buildModalCallback(res => {
+          if (res) {
+            this.game.removeCache(this.coordinates);
+            this.equip(contents);
+          }
+          this.resolver();
+        });
+        new Modal(this.game.display, pickupResponse, `${contents.display}. Would you like to equip it?`,
+          20, 20, 5, modalChoices.yn);
+      }
     } else if (contents instanceof Ladder) {
       const nextLevelResponse = this.buildModalCallback(res => {
         if (res) {

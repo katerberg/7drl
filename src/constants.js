@@ -85,6 +85,7 @@ export const enemies = {
       maxHp: 3,
     },
     xp: 1,
+    dropPercentage: 10,
     color: colors.RED,
   },
   SKELETON: {
@@ -95,6 +96,7 @@ export const enemies = {
       maxHp: 4,
     },
     xp: 3,
+    dropPercentage: 5,
     color: colors.RED,
   },
   TROLL: {
@@ -105,6 +107,7 @@ export const enemies = {
       maxHp: 25,
     },
     xp: 10,
+    dropPercentage: 30,
     color: colors.RED,
   },
   DRAGON: {
@@ -115,6 +118,7 @@ export const enemies = {
       maxHp: 200,
     },
     xp: 30,
+    dropPercentage: 80,
     color: colors.RED,
   },
   BALROG: {
@@ -125,6 +129,7 @@ export const enemies = {
       maxHp: 500,
     },
     xp: 0,
+    dropPercentage: 0,
     color: colors.ORANGE,
   },
 };
