@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.0] - 2020-03-06
+
+### Added
 
 - FOV
 - Potions as item drops
@@ -62,7 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copying over tutorial result from rot.js
 - Testing framework
 
-[unreleased]: https://github.com/katerberg/7drl/compare/v0.0.6...HEAD
+[unreleased]: https://github.com/katerberg/7drl/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/katerberg/7drl/releases/tag/v1.0.0
 [0.0.6]: https://github.com/katerberg/7drl/releases/tag/v0.0.6
 [0.0.5]: https://github.com/katerberg/7drl/releases/tag/v0.0.5
 [0.0.4]: https://github.com/katerberg/7drl/releases/tag/v0.0.4
