@@ -72,7 +72,10 @@ export default class Game {
   }
 
 
-  storeState() {
+  storeState(throwItAllAway) {
+    if (throwItAllAway) {
+      return window.localStorage.clear();
+    }
     const storage = {
       map: this.map,
       level: this.level,
@@ -255,12 +258,14 @@ export default class Game {
   }
 
   loseGame(enemy) {
+    this.storeState(true);
     this.scheduler.clear();
     const text = `You have lost after taking a brutal blow from a roaming ${enemy.type} named ${enemy.name}.\n\nWould you like to play again?`;
     new Modal(this.display, this.playAgainCallback.bind(this), text, 40, 20, 5, modalChoices.yn);
   }
 
   winGame() {
+    this.storeState(true);
     this.scheduler.clear();
     const text = 'You have defeated Gothmog, Lord of the Balrogs! Would you like to play again?';
     new Modal(this.display, this.playAgainCallback.bind(this), text, 40, 20, 5, modalChoices.yn);
