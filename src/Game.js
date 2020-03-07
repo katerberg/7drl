@@ -71,6 +71,31 @@ export default class Game {
     this.init();
   }
 
+
+  storeState() {
+    const storage = {
+      map: this.map,
+      level: this.level,
+      seenSpaces: this.seenSpaces,
+      freeCells: this.freeCells,
+      player: this.player,
+      exit: this.exit,
+      caches: this.caches,
+      enemies: this.enemies,
+    };
+    const seen = [];
+    const cyclicHandler = (key, val) => {
+      if (val !== null && val.enemies) {
+        if (seen.length) {
+          return;
+        }
+        seen.push(val);
+      }
+      return val;
+    };
+    window.localStorage.setItem('state', JSON.stringify(storage, cyclicHandler));
+  }
+
   resetAll() {
     this.map = {};
     this.level = 0;

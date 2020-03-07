@@ -220,27 +220,7 @@ class Player {
   }
 
   act() {
-    const storage = {
-      map: this.game.map,
-      level: this.game.level,
-      seenSpaces: this.game.seenSpaces,
-      freeCells: this.game.freeCells,
-      player: this,
-      exit: this.game.exit,
-      caches: this.game.caches,
-      enemies: this.game.enemies,
-    };
-    const seen = [];
-    const cyclicHandler = (key, val) => {
-      if (val !== null && val.enemies) {
-        if (seen.length) {
-          return;
-        }
-        seen.push(val);
-      }
-      return val;
-    };
-    window.localStorage.setItem('state', JSON.stringify(storage, cyclicHandler));
+    this.game.storeState();
     return new Promise(resolve => {
       this.listenForInput();
       this.resolver = resolve;
