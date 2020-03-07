@@ -246,6 +246,7 @@ export default class Game {
     this.enemies.length = 0;
     this.generateMap();
     this.populateEnemies();
+    this.drawLevel();
     this.seenSpaces = {};
     if (!this.map[this.player.coordinates]) {
       const key = this.popOpenFreeSpace();
@@ -260,6 +261,14 @@ export default class Game {
     const key = this.popOpenFreeSpace();
     const [x, y] = key.split(',').map(i => parseInt(i, 10));
     return new Actor(this, x, y, ...params);
+  }
+
+  drawLevel() {
+    this.display.draw(dimensions.WIDTH - 4, 0, 'L');
+    const levelString = `${this.level}`.padStart(3, 0);
+    for (let i = 3; i > 0; i--) {
+      this.display.draw(dimensions.WIDTH - i, 0, levelString[levelString.length - i]);
+    }
   }
 
   async nextTurn() {
@@ -277,6 +286,7 @@ export default class Game {
     this.populateEnemies();
     this.drawWalls();
     this.player.draw();
+    this.drawLevel();
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();
       if (!good) {
