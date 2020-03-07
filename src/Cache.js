@@ -24,18 +24,20 @@ class Cache {
   randomConstructor(level) {
     this.type = RNG.getWeightedValue(gearTypes);
     this.name = RNG.getItem(animals);
-    this.defense = 0;
-    this.attack = 0;
-    this.hp = 0;
+    this.modifiers = {
+      defense: 0,
+      attack: 0,
+      hp: 0,
+    };
     switch (this.type) { // eslint-disable-line default-case
     case 'Armor':
-      this.defense = RNG.getUniformInt(level, level + 5);
+      this.modifiers.defense = RNG.getUniformInt(level, level + 5);
       break;
     case 'Weapon':
-      this.attack = RNG.getUniformInt(level, level + 5);
+      this.modifiers.attack = RNG.getUniformInt(level, level + 5);
       break;
     case 'Amulet':
-      this.hp = RNG.getUniformInt(level, level + 20);
+      this.modifiers.hp = RNG.getUniformInt(level, level + 20);
       break;
     }
   }
@@ -45,7 +47,7 @@ class Cache {
   }
 
   get modifier() {
-    return this.attack || this.defense || this.hp;
+    return this.modifiers.attack || this.modifiers.defense || this.modifiers.hp;
   }
 }
 

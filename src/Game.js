@@ -16,7 +16,16 @@ export default class Game {
   constructor() {
     this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
     this.devmode = window.location.href.indexOf('devmode') > -1;
-    this.resetAll();
+    if (window.localStorage.getItem('state')) {
+      try {
+        this.loadFromState(JSON.parse(window.localStorage.getItem('state')));
+      } catch (e) {
+        console.log('error loading from state; clearing'); // eslint-disable-line no-console
+        window.localStorage.clear();
+      }
+    } else {
+      this.resetAll();
+    }
     document.body.appendChild(this.display.getContainer());
     if (!this.devmode) {
       this.player.releaseInput();
@@ -27,11 +36,45 @@ export default class Game {
     }
   }
 
+  loadFromState(state) {
+    this.map = state.map;
+    this.level = state.level;
+    this.seenSpaces = state.seenSpaces;
+    this.freeCells = state.freeCells;
+    this.exit = new Ladder(state.exit.x, state.exit.y);
+    this.caches = Object.keys(state.caches).map(cacheKey => {
+      if (!c) {
+        return c;
+      }
+      const c = state.caches[cacheKey];
+      const cache = new Cache(state.level, c.type, c.name, c.modifiers.attack, c.modifiers.defense, c.modifiers.hp);
+      cache.keyValue = cacheKey;
+      return cache;
+    }).filter(x => x).reduce((a, c) => ({...a, [c.keyValue]: c}), {});
+    this.scheduler = new Scheduler.Simple();
+    this.drawWalls();
+    this.player = new Player(this, state.player.x, state.player.y);
+    this.player.stats = state.player.stats;
+    Object.keys(state.player.gear).filter(g => state.player.gear[g]).forEach(gear => {
+      const g = state.player.gear[gear];
+      this.player.equip(new Cache(this.level, g.type, g.name, g.modifiers.attack, g.modifiers.defense, g.modifiers.hp));
+    });
+    this.player.currentHp = state.player.currentHp;
+    this.player.xp = state.player.xp;
+    this.scheduler.add(this.player, true);
+    this.enemies = [];
+    state.enemies.forEach(e => {
+      const enemy = new Enemy(this, e.x, e.y, enemies[e.type.toUpperCase()], e.name);
+      this.enemies.push(enemy);
+      this.scheduler.add(enemy, true);
+    });
+    this.init();
+  }
+
   resetAll() {
     this.map = {};
     this.level = 0;
     this.seenSpaces = {};
-    this.player = null;
     this.enemies = [];
     this.exit = null;
     this.freeCells = [];
@@ -39,6 +82,8 @@ export default class Game {
     this.scheduler = new Scheduler.Simple();
     this.generateMap();
     this.drawWalls();
+    this.populatePlayer();
+    this.populateEnemies();
     this.init();
   }
 
@@ -271,6 +316,11 @@ export default class Game {
     }
   }
 
+  populatePlayer() {
+    this.player = this.createActor(Player);
+    this.scheduler.add(this.player, true);
+  }
+
   async nextTurn() {
     const actor = this.scheduler.next();
     if (!actor) {
@@ -281,9 +331,6 @@ export default class Game {
   }
 
   async init() {
-    this.player = this.createActor(Player);
-    this.scheduler.add(this.player, true);
-    this.populateEnemies();
     this.drawWalls();
     this.player.draw();
     this.drawLevel();
