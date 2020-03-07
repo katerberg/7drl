@@ -129,12 +129,12 @@ export default class Game {
     if (this.player.x === x && this.player.y === y) {
       symbol = symbols.PLAYER;
       color = colors.YELLOW;
-    } else if (this.caches[keyFormat]) {
-      symbol = symbols[this.caches[keyFormat].type.toUpperCase()];
-      color = colors.GREEN;
     } else if (!faded && this.enemies.find(e => e.x === x && e.y === y)) {
       const enemy = this.enemies.find(e => e.x === x && e.y === y);
       ({color, symbol} = enemy);
+    } else if (this.caches[keyFormat]) {
+      symbol = symbols[this.caches[keyFormat].type.toUpperCase()];
+      color = colors.GREEN;
     } else if (this.exit.matches(keyFormat)) {
       symbol = symbols.LADDER;
       color = colors.WHITE;
