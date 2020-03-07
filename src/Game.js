@@ -276,7 +276,7 @@ export default class Game {
     this.scheduler.add(this.player, true);
     this.populateEnemies();
     this.drawWalls();
-    this.drawFov();
+    this.player.draw();
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();
       if (!good) {
