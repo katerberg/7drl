@@ -134,7 +134,7 @@ export const enemies = {
   },
 };
 
-export const xpLevels = {
+export const xpLevels: {[key: number]: number} = {
   1: 2,
   2: 6,
   3: 15,

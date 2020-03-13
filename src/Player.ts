@@ -4,6 +4,7 @@ import Cache from './Cache';
 import Ladder from './Ladder';
 import Modal from './Modal';
 import Menu from './Menu';
+import Game from './Game';
 
 function getDisplayText(gear) {
   if (gear) {
@@ -11,8 +12,24 @@ function getDisplayText(gear) {
   }
 }
 
-class Player {
-  constructor(game, x, y) {
+class Player implements EventListenerObject {
+  gear: {
+    Weapon: Cache | null;
+    Armor: Cache | null;
+    Amulet: Cache | null;
+  };
+  currentHp: number;
+  resolver: () => void;
+  game: Game;
+  x: number;
+  y: number;
+  xp: number;
+  stats: {
+    maxHp: number;
+    strength: number;
+    dexterity: number;
+  };
+  constructor(game: Game, x:number, y:number) {
     this.game = game;
     this.x = x;
     this.y = y;
@@ -43,7 +60,8 @@ class Player {
     return this.stats.strength + modifier;
   }
 
-  handleEvent({keyCode}) {
+  handleEvent(evt: KeyboardEvent) {
+    const keyCode:number = evt.keyCode;
     if (keyCode === 81 && this.game.devmode) { // Q
       this.game.nextLevel();
     }
@@ -133,16 +151,16 @@ class Player {
     }
   }
 
-  buildModalCallback(callback) {
+  buildModalCallback(callback?): (res?) => void {
     this.releaseInput();
-    return (res) => {
+    return (res?) => {
       callback && callback(res);
       this.game.rebuild();
       this.listenForInput();
     };
   }
-  get level() {
-    return Object.keys(xpLevels).find(k => xpLevels[k] > this.xp) - 1;
+  get level(): number {
+    return parseInt(Object.keys(xpLevels).find(k => xpLevels[k] > this.xp), 10) - 1;
   }
 
   handleOpenInventory() {
@@ -219,32 +237,32 @@ class Player {
     }
   }
 
-  act() {
-    this.game.storeState();
+  act():Promise<(res)=> void> {
+    this.game.storeState(false);
     return new Promise(resolve => {
       this.listenForInput();
       this.resolver = resolve;
     });
   }
 
-  drawHp() {
+  drawHp():void {
     this.game.display.drawText(dimensions.WIDTH - 15, 0, 'HP:');
     const currentHpString = `${this.currentHp}`;
     const maxHpString = `${this.stats.maxHp + (this.gear.Amulet ? this.gear.Amulet.modifier : 0)}`;
     const start = dimensions.WIDTH - 12;
     for (let i = 0; i < currentHpString.length; i++) {
-      this.game.display.draw(start + i, 0, currentHpString[i]);
+      this.game.display.draw(start + i, 0, currentHpString[i], null, null);
     }
-    this.game.display.draw(start + currentHpString.length, 0, '/');
+    this.game.display.draw(start + currentHpString.length, 0, '/', null, null);
     for (let i = 0; i < maxHpString.length; i++) {
-      this.game.display.draw(start + i + 1 + currentHpString.length, 0, maxHpString[i]);
+      this.game.display.draw(start + i + 1 + currentHpString.length, 0, maxHpString[i], null, null);
     }
     for (let i = 0; i <= 6 - maxHpString.length - currentHpString.length; i++) {
-      this.game.display.draw(start + i + 1 + currentHpString.length + maxHpString.length, 0, ' ');
+      this.game.display.draw(start + i + 1 + currentHpString.length + maxHpString.length, 0, ' ', null, null);
     }
   }
 
-  draw(x, y) {
+  draw(x?, y?): void {
     const oldX = this.x;
     const oldY = this.y;
     this.x = x || oldX;

@@ -1,10 +1,28 @@
 import {v4 as uuid} from 'uuid';
 import {Path, RNG} from 'rot-js';
 import Cache from './Cache';
+import Game from './Game';
 import {enemies} from './constants';
 
 class Enemy {
-  constructor(game, x, y, enemy, name) {
+  id: string;
+  x: number;
+  y: number;
+  name: string;
+  type: string;
+  xp: number;
+  color: string;
+  item: Cache | null;
+  currentHp: number;
+  symbol: string;
+  game: Game;
+  stats: {
+    strength: number;
+    dexterity: number;
+    maxHp: number;
+  };
+
+  constructor(game: Game, x: number, y: number, enemy: any, name: string) {
     this.game = game;
     this.id = uuid();
     this.x = x;
@@ -54,7 +72,7 @@ class Enemy {
     }
   }
 
-  draw(x, y) {
+  draw(x?: number, y?: number) {
     const newX = x || this.x;
     const newY = y || this.y;
     this.x = newX;
@@ -86,4 +104,3 @@ class Enemy {
 
 
 export default Enemy;
-

@@ -1,8 +1,9 @@
 import 'regenerator-runtime/runtime';
 import {Display, FOV, Map, RNG, Scheduler} from 'rot-js';
+import Simple from "rot-js/lib/scheduler/simple";
 import {goblins, dragons, trolls, skeletons} from './static/enemies';
 import {buildInstructionsModal} from './modalBuilder';
-import tinycolor from 'tinycolor2';
+import * as tinycolor from 'tinycolor2';
 import {v4 as uuid} from 'uuid';
 import Player from './Player';
 import Enemy from './Enemy';
@@ -12,6 +13,17 @@ import Modal from './Modal';
 import {dimensions, enemies, symbols, colors, modalChoices} from './constants';
 
 export default class Game {
+  display: Display;
+  player: Player;
+  map: {};
+  caches: {};
+  enemies: Enemy[];
+  freeCells: string[];
+  exit: Ladder;
+  seenSpaces: {};
+  level: number;
+  scheduler: Simple;
+  devmode: boolean;
 
   constructor() {
     this.display = new Display({width: dimensions.WIDTH, height: dimensions.HEIGHT});
@@ -43,10 +55,10 @@ export default class Game {
     this.freeCells = state.freeCells;
     this.exit = new Ladder(state.exit.x, state.exit.y);
     this.caches = Object.keys(state.caches).map(cacheKey => {
+      const c = state.caches[cacheKey];
       if (!c) {
         return c;
       }
-      const c = state.caches[cacheKey];
       const cache = new Cache(state.level, c.type, c.name, c.modifiers.attack, c.modifiers.defense, c.modifiers.hp);
       cache.keyValue = cacheKey;
       return cache;
@@ -72,7 +84,7 @@ export default class Game {
   }
 
 
-  storeState(throwItAllAway) {
+  storeState(throwItAllAway: boolean) {
     if (throwItAllAway) {
       return window.localStorage.clear();
     }
@@ -117,7 +129,7 @@ export default class Game {
 
   rebuild() {
     this.drawWalls();
-    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER, colors.WHITE);
+    this.display.draw(this.exit[0], this.exit[1], symbols.LADDER, colors.WHITE, null);
     this.player.draw();
     this.enemies.forEach(e => e.draw());
   }
@@ -153,10 +165,11 @@ export default class Game {
   }
 
   addExitLadder() {
-    this.exit = new Ladder(...this.popOpenFreeSpace().split(','));
+    const [x, y] = this.popOpenFreeSpace().split(',');
+    this.exit = new Ladder(x, y);
   }
 
-  popOpenFreeSpace() {
+  popOpenFreeSpace(): string {
     const index = Math.floor(RNG.getUniform() * this.freeCells.length);
     return this.freeCells.splice(index, 1)[0];
   }
@@ -170,7 +183,7 @@ export default class Game {
     for (let i = 0; i < dimensions.WIDTH; i++) {
       for (let j = 1; j < dimensions.HEIGHT; j++) {
         if (!this.seenSpaces[`${i},${j}`]) {
-          this.display.draw(i, j, symbols.WALL);
+          this.display.draw(i, j, symbols.WALL, null, null);
         }
       }
     }
@@ -213,10 +226,10 @@ export default class Game {
       color = colors.WHITE;
     } else if (!this.map[keyFormat]) {
       symbol = symbols.WALL;
-      color - colors.WHITE;
+      color = colors.WHITE;
     }
     color = faded ? tinycolor(color).darken(30).toString() : color;
-    this.display.draw(x, y, symbol, color);
+    this.display.draw(x, y, symbol, color, null);
   }
 
   sendMessage(message) {
@@ -226,7 +239,7 @@ export default class Game {
 
   clearMessage() {
     for (let i = 0; i < dimensions.WIDTH - 15; i++) {
-      this.display.draw(i, 0, ' ');
+      this.display.draw(i, 0, ' ', null, null);
     }
   }
 
@@ -339,10 +352,10 @@ export default class Game {
   }
 
   drawLevel() {
-    this.display.draw(dimensions.WIDTH - 4, 0, 'L');
-    const levelString = `${this.level}`.padStart(3, 0);
+    this.display.draw(dimensions.WIDTH - 4, 0, 'L', null, null);
+    const levelString = `${this.level}`.padStart(3, '0');
     for (let i = 3; i > 0; i--) {
-      this.display.draw(dimensions.WIDTH - i, 0, levelString[levelString.length - i]);
+      this.display.draw(dimensions.WIDTH - i, 0, levelString[levelString.length - i], null, null);
     }
   }
 
@@ -362,7 +375,7 @@ export default class Game {
 
   async init() {
     this.drawWalls();
-    this.player.draw();
+    this.player.draw()
     this.drawLevel();
     while (1) { // eslint-disable-line no-constant-condition
       const good = await this.nextTurn();

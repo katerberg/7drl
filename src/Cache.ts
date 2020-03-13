@@ -3,8 +3,17 @@ import {animals} from './static/animals';
 import {gearTypes} from './constants';
 
 class Cache {
-  constructor(level, type, name, attack = 0, defense = 0, hp = 0) {
-    if (type) {
+  keyValue: string;
+  type: string;
+  name: string;
+  modifiers: {
+    attack: number;
+    defense: number;
+    hp: number;
+  };
+
+  constructor(level, type?, name?, attack = 0, defense = 0, hp = 0) {
+    if (name) {
       this.defaultConstructor(type, name, attack, defense, hp);
     } else {
       this.randomConstructor(level);

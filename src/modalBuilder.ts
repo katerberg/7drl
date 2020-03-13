@@ -8,5 +8,5 @@ export function buildInstructionsModal(display, callback) {
   Inventory: I/G
   Help: M/Esc
   `;
-  new Modal(display, callback, instructions, 40, 20, 5);
+  new Modal(display, callback, instructions, 40, 20, 5, null);
 }
