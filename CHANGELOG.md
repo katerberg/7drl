@@ -70,7 +70,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copying over tutorial result from rot.js
 - Testing framework
 
-[unreleased]: https://github.com/katerberg/7drl/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/katerberg/7drl/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/katerberg/7drl/releases/tag/v1.0.1
 [1.0.0]: https://github.com/katerberg/7drl/releases/tag/v1.0.0
 [0.0.6]: https://github.com/katerberg/7drl/releases/tag/v0.0.6
 [0.0.5]: https://github.com/katerberg/7drl/releases/tag/v0.0.5
